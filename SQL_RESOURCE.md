@@ -11,3 +11,5 @@
 - https://medium.com/@vino7tech/50-sql-interview-questions-and-answer-you-must-know-it-294602880871
 - https://roadmap.sh/questions/sql-queries
 - https://www.w3schools.com/sql/sql_intro.asp
+- https://www.youtube.com/watch?v=RQPpP2ywA9k&list=PLrL_PSQ6q062H5CetdplYW7xQKeq8XaR0&index=41
+- https://drive.google.com/file/d/1EyD34zjZmtg9rgJySIGjECJzJg0MG_a1/view
