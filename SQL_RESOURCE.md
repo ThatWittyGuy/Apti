@@ -6,3 +6,4 @@
 - https://www.geeksforgeeks.org/sql/sql-query-interview-questions/
 - https://skphd.medium.com/top-20-sql-queries-interview-questions-with-answers-56e70e4878d2
 - https://github.com/Devinterview-io/sql-interview-questions
+- https://devinterview.io/questions/web-and-mobile-development/sql-interview-questions
