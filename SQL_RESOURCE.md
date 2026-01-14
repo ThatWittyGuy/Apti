@@ -10,3 +10,4 @@
 - https://www.dbvis.com/wp-content/uploads/2024/04/SQL-Cheat-Sheet.pdf
 - https://medium.com/@vino7tech/50-sql-interview-questions-and-answer-you-must-know-it-294602880871
 - https://roadmap.sh/questions/sql-queries
+- https://www.w3schools.com/sql/sql_intro.asp
