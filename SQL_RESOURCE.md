@@ -1,0 +1,8 @@
+### SQL:
+- https://www.geeksforgeeks.org/sql/30-days-of-sql-from-basic-to-advanced-level/
+- https://www.interviewbit.com/sql-interview-questions/
+- https://sheelganvir.medium.com/complete-sql-from-basics-to-advanced-for-placements-all-sql-queries-sql-for-analyst-74ddd6a68840
+- https://www.codechef.com/practice/sql-case-studies-topic-wise
+- https://www.geeksforgeeks.org/sql/sql-query-interview-questions/
+- https://skphd.medium.com/top-20-sql-queries-interview-questions-with-answers-56e70e4878d2
+- https://github.com/Devinterview-io/sql-interview-questions
