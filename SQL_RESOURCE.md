@@ -9,3 +9,4 @@
 - https://devinterview.io/questions/web-and-mobile-development/sql-interview-questions
 - https://www.dbvis.com/wp-content/uploads/2024/04/SQL-Cheat-Sheet.pdf
 - https://medium.com/@vino7tech/50-sql-interview-questions-and-answer-you-must-know-it-294602880871
+- https://roadmap.sh/questions/sql-queries
