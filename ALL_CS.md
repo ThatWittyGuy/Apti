@@ -1,6 +1,7 @@
 # OS-DBMS-OOP-CN
 
 - https://www.geeksforgeeks.org/interview-prep/os-cn-dbms-interview-questions/
+- https://github.com/VaibhavSaraf/Placement-of-Things
 
 <br>
 
