@@ -33,5 +33,6 @@
 ### Interview
 - https://www.datacamp.com/blog/top-sql-interview-questions-and-answers-for-beginners-and-intermediate-practitioners
 - https://www.simplilearn.com/top-sql-interview-questions-and-answers-article
+- https://www.interviewbit.com/sql-interview-questions/
 - https://drive.google.com/file/d/1uVPcK79gzFcmtAIMyI2dA8hdE8_RBQPR/view
 - https://medium.com/@chandantechie/top-20-most-asked-sql-interview-questions-for-data-science-analytics-role-30278a5e2052
