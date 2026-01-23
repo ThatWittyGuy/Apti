@@ -14,3 +14,6 @@
 
 ### Reading
 - https://www.geeksforgeeks.org/blogs/a-step-by-step-approach-to-learn-object-oriented-programming/
+- - https://www.geeksforgeeks.org/interview-prep/oops-interview-questions/
+- https://www.geeksforgeeks.org/java/object-oriented-programming-oops-concept-in-java/
+- https://github.com/aman0046/LastMinuteRevision-OOP
