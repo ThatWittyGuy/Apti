@@ -2,6 +2,7 @@
 
 - https://career.guru99.com/top-50-operating-system-interview-questions/
 - https://github.com/riti2409/Operating_System_Series
+- https://www.sanfoundry.com/operating-system-questions-answers/
 
 
 ### YT
