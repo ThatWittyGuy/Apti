@@ -3,7 +3,7 @@
 - https://career.guru99.com/top-50-operating-system-interview-questions/
 - https://github.com/riti2409/Operating_System_Series
 - https://www.sanfoundry.com/operating-system-questions-answers/
-
+- https://www.geeksforgeeks.org/operating-systems/operating-systems-interview-questions/
 
 ### YT
 - https://www.youtube.com/playlist?list=PLrL_PSQ6q0606tibu0c9lFIzkFtshv7HI
@@ -11,3 +11,7 @@
 ### Reading
 - https://www.os-book.com/OS9/slide-dir/index.html
 - https://drive.google.com/file/d/1FAxjhyIlsGGouIyCPyR3xqKVgU7mhEmQ/view
+- https://whimsical.com/operating-system-cheatsheet-by-love-babbar-S9tuWBCSQfzoBRF5EDNinQ
+- https://docs.google.com/document/d/1QwJwTH85QtxIOq-mRb3kPequDnD5qy54HS_UU_hEbOw/edit?tab=t.0
+- https://docs.google.com/document/d/1dPYIv4zb35SWYG7EY1ipfu5Cj_fpreTfsUVJ3JOGL0w/edit?tab=t.0
+- https://www.geeksforgeeks.org/operating-systems/operating-systems/
