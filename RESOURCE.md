@@ -17,6 +17,7 @@
 
 ### Websites to Learn
 - https://www.geeksforgeeks.org/aptitude/aptitude-for-placements/
+- https://www.geeksforgeeks.org/aptitude/aptitude-questions-and-answers/
 - https://prepinsta.com/complete-aptitude-preparation/
 - https://prepinsta.com/learn-aptitude/
 - https://www.geeksforgeeks.org/aptitude/aptitude-questions-and-answers/
