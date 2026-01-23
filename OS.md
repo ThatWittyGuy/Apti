@@ -9,6 +9,8 @@
 
 ### YT
 - https://www.youtube.com/playlist?list=PLrL_PSQ6q0606tibu0c9lFIzkFtshv7HI
+- https://www.youtube.com/watch?v=8XBtAjKwCm4
+- Love Babbar
 
 ### Reading
 - https://www.os-book.com/OS9/slide-dir/index.html
