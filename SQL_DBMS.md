@@ -28,7 +28,8 @@
 - https://www.db-book.com/db6/slide-dir/
 - https://www.geeksforgeeks.org/last-minute-notes-dbms/
 - https://github.com/sumitsojha88/Placement-Preparation/blob/main/DBMS/DBMS%20Quick%20Guide/dbms_tutorial.pdf
-
+- https://www.geeksforgeeks.org/dbms/commonly-asked-dbms-interview-questions/
+- https://www.geeksforgeeks.org/dbms/last-minute-notes-dbms/
   
 ### Interview
 - https://www.datacamp.com/blog/top-sql-interview-questions-and-answers-for-beginners-and-intermediate-practitioners
