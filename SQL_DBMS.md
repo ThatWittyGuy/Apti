@@ -17,3 +17,6 @@
 3. Riti Kumari https://www.youtube.com/playlist?list=PLrL_PSQ6q062H5CetdplYW7xQKeq8XaR0
 4. M Prashant Tech YT https://www.youtube.com/watch?v=Hy3qbMAoEJk&t=380s
 5. Akshit Madan https://www.youtube.com/watch?v=nYmoQ4r0DVw
+
+### Reading
+- https://www.db-book.com/db6/slide-dir/
