@@ -28,6 +28,7 @@
 
 ### Practice
 - https://www.indiabix.com/
+- https://prepinsta.com/complete-aptitude-preparation/?utm_source=home+page&utm_medium=navigation
 - https://www.learntheta.com/placement-aptitude-questions/
 - https://www.learntheta.com/placement-aptitude-percentages/
 - https://www.learntheta.com/aptitude-questions/
