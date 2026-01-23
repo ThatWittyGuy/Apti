@@ -7,6 +7,7 @@
 - https://drive.google.com/drive/folders/1XmI6Iq_0MXJ6vq6Nkk-DcBK_y_LWNLCM
 - https://github.com/sumitsojha88/Placement-Preparation
 - https://www.lets-code.co.in/articles/placement/
+- https://www.sanfoundry.com/quantitative-aptitude-questions-answers/
   
 <hr>
 
