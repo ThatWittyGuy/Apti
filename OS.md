@@ -6,3 +6,6 @@
 
 ### YT
 - https://www.youtube.com/playlist?list=PLrL_PSQ6q0606tibu0c9lFIzkFtshv7HI
+
+### Reading
+- https://www.os-book.com/OS9/slide-dir/index.html
