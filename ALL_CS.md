@@ -8,6 +8,16 @@
 - Last Minute Revision
 
 
+## Roadmaps/Resources
+- https://www.lets-code.co.in/articles/resources/
+- https://www.lets-code.co.in/articles/free-placement-google-drive-links/
+- https://docs.google.com/spreadsheets/d/1mBWWVVzCupbjQeTlpXFfHflqTmsBK9rCBQ7QJNE7HdY/edit?gid=1547960802#gid=1547960802
+- https://github.com/imsubhra/Roadmaps_for_topics_of_placements
+- https://www.geeksforgeeks.org/dsa/sde-sheet-a-complete-guide-for-sde-preparation/
+- https://www.youtube.com/watch?v=D0mIwCfgIWw   Aryan Mittal
+- 
+
+
 <br>
 
 ---
