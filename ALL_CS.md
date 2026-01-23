@@ -2,6 +2,11 @@
 
 - https://www.geeksforgeeks.org/interview-prep/os-cn-dbms-interview-questions/
 - https://github.com/VaibhavSaraf/Placement-of-Things
+- MUST DO
+- https://docs.google.com/document/d/1sQlRDw6--HwyxeFL7b4kBsOG-Tz7rXMbpWNnfvJErA4/edit?tab=t.0
+- https://takeuforward.org/interviews/must-do-questions-for-dbms-cn-os-interviews-sde-core-sheet
+- Last Minute Revision
+
 
 <br>
 
