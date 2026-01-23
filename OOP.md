@@ -17,3 +17,4 @@
 - - https://www.geeksforgeeks.org/interview-prep/oops-interview-questions/
 - https://www.geeksforgeeks.org/java/object-oriented-programming-oops-concept-in-java/
 - https://github.com/aman0046/LastMinuteRevision-OOP
+- https://sheelganvir.medium.com/oops-for-oncampus-placements-beginner-to-advanced-complete-oops-in-c-4bb3b91395b3
