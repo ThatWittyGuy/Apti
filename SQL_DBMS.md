@@ -9,10 +9,11 @@
 1. Leetcode: https://leetcode.com/studyplan/top-sql-50/
 2. Codechef: https://www.codechef.com/practice/sql-case-studies-topic-wise
 3. Hacker rank
-4. https://datalemur.com/sql-tutorial/intro-to-sql
-5. https://www.naukri.com/code360/problem-lists/top-100-sql-problems?sort_entity=avg_time&sort_order=ASC
-6. https://platform.stratascratch.com/coding?code_type=3
-7. https://www.interviewquery.com/questions?searchQuery=&searchQuestionTag=&searchCompany=bar&completed=&saved=&ordering=level&orderingDirection=asc&pageSize=20&page=0&topics=sql
+4. https://www.interviewbit.com/sql-interview-questions/
+5. https://datalemur.com/sql-tutorial/intro-to-sql
+6. https://www.naukri.com/code360/problem-lists/top-100-sql-problems?sort_entity=avg_time&sort_order=ASC
+7. https://platform.stratascratch.com/coding?code_type=3
+8. https://www.interviewquery.com/questions?searchQuery=&searchQuestionTag=&searchCompany=bar&completed=&saved=&ordering=level&orderingDirection=asc&pageSize=20&page=0&topics=sql
 
 <br>
 
