@@ -5,3 +5,4 @@
 - https://www.geeksforgeeks.org/hr/hr-interview-questions/
 - https://www.geeksforgeeks.org/interview-experiences/placements-gq/
 - https://www.geeksforgeeks.org/interview-experiences/quiz-corner-gq/
+- https://algomaster.io/learn/behavioral/what-are-behavioral-interviews
