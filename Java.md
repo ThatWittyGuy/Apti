@@ -5,3 +5,4 @@
 3. 150+ MCQS: https://www.placementpreparation.io/mcq/java/
 4. Best resource for MCQ : Safoundry - : https://www.sanfoundry.com/java-questions-answers-freshers-experienced/
 5. https://www.guru99.com/java-interview-questions-answers.html
+6. https://www.interviewbit.com/java-interview-questions/
