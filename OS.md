@@ -9,3 +9,4 @@
 
 ### Reading
 - https://www.os-book.com/OS9/slide-dir/index.html
+- https://drive.google.com/file/d/1FAxjhyIlsGGouIyCPyR3xqKVgU7mhEmQ/view
