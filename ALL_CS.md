@@ -15,8 +15,14 @@
 - https://github.com/imsubhra/Roadmaps_for_topics_of_placements
 - https://www.geeksforgeeks.org/dsa/sde-sheet-a-complete-guide-for-sde-preparation/
 - https://www.youtube.com/watch?v=D0mIwCfgIWw   Aryan Mittal
-- 
+- https://www.youtube.com/playlist?list=PLKZaSt2df1gw-QLQSDiar21lxElFs_As_
+- https://github.com/sumitsojha88/Placement-Preparation
+- https://github.com/sumitsojha88/Placement-Preparation/blob/main/DBMS/Topic%20to%20prepare/Important%20topics%20interview.pdf
+- https://docs.google.com/document/d/1gDxyUfyTSAAC_fibkEDrCIJ6iVNMcotU_cbxh4fZK60/edit?tab=t.0
+- https://www.geeksforgeeks.org/blogs/interview-preparation-roadmap/
+- https://drive.google.com/drive/folders/18FBvExqEtt9mtNKKP65f_ETdtS7nCG1G
 
+  
 
 <br>
 
