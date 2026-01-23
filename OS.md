@@ -4,6 +4,8 @@
 - https://github.com/riti2409/Operating_System_Series
 - https://www.sanfoundry.com/operating-system-questions-answers/
 - https://www.geeksforgeeks.org/operating-systems/operating-systems-interview-questions/
+- https://www.geeksforgeeks.org/operating-systems/last-minute-notes-operating-systems/
+
 
 ### YT
 - https://www.youtube.com/playlist?list=PLrL_PSQ6q0606tibu0c9lFIzkFtshv7HI
