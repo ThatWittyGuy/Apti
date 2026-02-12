@@ -4,6 +4,8 @@
 - https://www.hellointerview.com/learn/system-design/problem-breakdowns/dropbox
 - https://www.geeksforgeeks.org/system-design/system-design-of-uber-app-uber-system-architecture/
 - https://systemdesignschool.io/problems/google-doc/solution
+- https://systemdesign.one/system-design-pastebin/
+- https://systemdesignschool.io/problems/pastebin/solution
 
 ## Linkedin
 
