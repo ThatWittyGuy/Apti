@@ -1,0 +1,5 @@
+- https://www.linkedin.com/posts/sameer-bhardwaj1298_if-i-travel-back-to-my-interview-days-i-share-7422266256034291712--lCP/?utm_source=share&utm_medium=member_android&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI
+
+- Rajat Gajbhiye: https://www.linkedin.com/posts/rajatgajbhiye_25-most-asked-system-design-interview-questions-activity-7426990065509138432-Emtk?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI
+
+- https://www.linkedin.com/posts/rajatgajbhiye_25lpa-at-jpmorganchase-this-is-the-classic-activity-7426114861165780992-MWvU?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI
