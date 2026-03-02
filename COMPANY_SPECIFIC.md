@@ -1,6 +1,7 @@
 ## Company Specific Links
 
 - https://www.aptimentor.com/companies-specifie-process/
+- https://www.learntheta.com/aptitude-questions-by-company/
 
 ### Barclays
 
