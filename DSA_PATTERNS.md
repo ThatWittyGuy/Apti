@@ -23,6 +23,7 @@
 - https://blog.algomaster.io/p/linked-list
 - https://blog.algomaster.io/p/how-to-start-leetcode-in-2025
 - https://docs.google.com/document/d/16m8RGKmFF1zJSSItgZQPJhdwrbGVz4dOKhQY6LmZ7RM/edit?usp=sharing
+- https://www.linkedin.com/posts/akashsinnghh_heres-how-id-restart-dsa-prep-if-i-were-share-7433716394468446208-Yfff/?utm_source=share&utm_medium=member_android&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI
 
 ## Notion/Excel
 
