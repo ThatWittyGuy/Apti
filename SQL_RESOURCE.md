@@ -1,4 +1,5 @@
 ### SQL:
+
 - https://www.geeksforgeeks.org/sql/30-days-of-sql-from-basic-to-advanced-level/
 - https://www.interviewbit.com/sql-interview-questions/
 - https://sheelganvir.medium.com/complete-sql-from-basics-to-advanced-for-placements-all-sql-queries-sql-for-analyst-74ddd6a68840
@@ -13,3 +14,4 @@
 - https://www.w3schools.com/sql/sql_intro.asp
 - https://www.youtube.com/watch?v=RQPpP2ywA9k&list=PLrL_PSQ6q062H5CetdplYW7xQKeq8XaR0&index=41
 - https://drive.google.com/file/d/1EyD34zjZmtg9rgJySIGjECJzJg0MG_a1/view
+- https://www.w3resource.com/sql-exercises/

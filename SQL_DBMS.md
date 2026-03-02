@@ -16,6 +16,7 @@
 6. https://www.naukri.com/code360/problem-lists/top-100-sql-problems?sort_entity=avg_time&sort_order=ASC
 7. https://platform.stratascratch.com/coding?code_type=3
 8. https://www.interviewquery.com/questions?searchQuery=&searchQuestionTag=&searchCompany=bar&completed=&saved=&ordering=level&orderingDirection=asc&pageSize=20&page=0&topics=sql
+9. https://www.w3resource.com/sql-exercises/
 
 <br>
 
