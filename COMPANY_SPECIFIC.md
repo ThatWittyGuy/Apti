@@ -2,6 +2,8 @@
 
 - https://www.aptimentor.com/companies-specifie-process/
 - https://www.learntheta.com/aptitude-questions-by-company/
+- https://algo.monster/interview-guides
+
 
 ### Barclays
 
