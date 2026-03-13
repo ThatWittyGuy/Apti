@@ -16,3 +16,4 @@
 ### LinkedIN
 
 - https://www.linkedin.com/posts/sakshi-gawande_you-should-know-this-20-lld-interview-questions-share-7431912273511796737-EVUd/?utm_source=social_share_send&utm_medium=android_app&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI&utm_campaign=copy_link
+- https://www.linkedin.com/posts/ankur-dhawan01_sde1-sde2-sde3-share-7437350411189182464-jIqA?utm_source=share&utm_medium=member_android&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI
