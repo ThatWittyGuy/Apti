@@ -16,3 +16,4 @@
 - https://drive.google.com/file/d/1EyD34zjZmtg9rgJySIGjECJzJg0MG_a1/view
 - https://www.w3resource.com/sql-exercises/
 - https://www.placementpreparation.io/blog/sql-interview-questions-for-freshers/
+- https://www.placementpreparation.io/programming-exercises/sql/advanced/

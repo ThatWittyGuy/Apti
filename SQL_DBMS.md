@@ -47,3 +47,4 @@
 - https://medium.com/@chandantechie/top-20-most-asked-sql-interview-questions-for-data-science-analytics-role-30278a5e2052
 - https://www.linkedin.com/posts/raunakyadush_referrals-careers-querylogic-share-7433716908782448640-tahr/?utm_source=share&utm_medium=member_android&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI
 - https://www.linkedin.com/posts/sohansethi_i-learned-sql-in-8-weeks-using-this-roadmap-share-7432424595988602880-h2Ub/?utm_source=share&utm_medium=member_android&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI
+- https://www.placementpreparation.io/mcq/dbms/

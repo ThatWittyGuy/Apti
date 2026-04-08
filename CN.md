@@ -9,6 +9,8 @@
 - - https://www.geeksforgeeks.org/computer-networks/commonly-asked-computer-networks-interview-questions-set-1/
 - https://prepinsta.com/interview-preparation/technical-interview-questions/computer-network/
 - https://www.geeksforgeeks.org/computer-networks/last-minute-notes-computer-network/
+- https://www.placementpreparation.io/mcq/computer-network/
 
 ### YT
+
 - https://www.youtube.com/playlist?list=PLxCzCOWd7aiGFBD2-2joCpWOLUrDLvVV_
