@@ -4,6 +4,7 @@
 - https://veedaily19.substack.com/p/master-sql-in-just-15-days-e21
 - https://veedaily19.substack.com/p/strategically-preparing-for-sql-interviews
 - https://www.placementpreparation.io/blog/dbms-interview-questions-for-freshers/
+- https://www.guvi.in/hub/dbms-and-sql-tutorial/
 
 ### SQL practice:
 
@@ -48,3 +49,4 @@
 - https://www.linkedin.com/posts/raunakyadush_referrals-careers-querylogic-share-7433716908782448640-tahr/?utm_source=share&utm_medium=member_android&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI
 - https://www.linkedin.com/posts/sohansethi_i-learned-sql-in-8-weeks-using-this-roadmap-share-7432424595988602880-h2Ub/?utm_source=share&utm_medium=member_android&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI
 - https://www.placementpreparation.io/mcq/dbms/
+- https://www.placementpreparation.io/blog/dbms-interview-questions-for-freshers/

@@ -25,3 +25,5 @@
 - https://www.geeksforgeeks.org/interview-experiences/morgan-stanley-interview-experience-summer-internship-on-campus/
 - https://www.geeksforgeeks.org/interview-experiences/morgan-stanley-interview-set-2-2/
 - https://github.com/liquidslr/interview-company-wise-problems/blob/main/Morgan%20Stanley/5.%20All.csv
+- https://www.geeksforgeeks.org/explore?page=3&company=Morgan%20Stanley&difficulty=Medium,Hard&sortBy=submissions
+- https://www.geeksforgeeks.org/interview-experiences/morgan-stanley-interview-set-9-campus-internship/

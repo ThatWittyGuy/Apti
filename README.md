@@ -8,3 +8,6 @@
 - https://www.learntheta.com/aptitude-questions-by-company/
 - https://www.placementpreparation.io/company-specific/aptitude/
 - https://www.guvi.in/hub/
+- https://www.guvi.in/hub/java-tutorial/
+- Debugging: https://www.guvi.in/debugging/
+- https://github.com/liquidslr/interview-company-wise-problems
