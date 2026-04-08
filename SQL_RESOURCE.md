@@ -15,3 +15,4 @@
 - https://www.youtube.com/watch?v=RQPpP2ywA9k&list=PLrL_PSQ6q062H5CetdplYW7xQKeq8XaR0&index=41
 - https://drive.google.com/file/d/1EyD34zjZmtg9rgJySIGjECJzJg0MG_a1/view
 - https://www.w3resource.com/sql-exercises/
+- https://www.placementpreparation.io/blog/sql-interview-questions-for-freshers/

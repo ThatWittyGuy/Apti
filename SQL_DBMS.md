@@ -3,6 +3,7 @@
 - https://veedaily19.substack.com/p/sql-roadmap
 - https://veedaily19.substack.com/p/master-sql-in-just-15-days-e21
 - https://veedaily19.substack.com/p/strategically-preparing-for-sql-interviews
+- https://www.placementpreparation.io/blog/dbms-interview-questions-for-freshers/
 
 ### SQL practice:
 
