@@ -17,6 +17,8 @@
 
 - https://www.linkedin.com/posts/sakshi-gawande_you-should-know-this-20-lld-interview-questions-share-7431912273511796737-EVUd/?utm_source=social_share_send&utm_medium=android_app&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI&utm_campaign=copy_link
 
+- https://www.linkedin.com/posts/sahil-hans_if-youre-preparing-for-system-design-interviews-share-7446872430381330432-LrrV?utm_source=social_share_send&utm_medium=android_app&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI&utm_campaign=copy_link
+
 ## YT
 
 - https://www.youtube.com/playlist?list=PLPtUyMfD0mNJDZg50fg2CptjLBavHot47
