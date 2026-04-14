@@ -4,6 +4,7 @@
 - https://www.linkedin.com/posts/rajatgajbhiye_i-didnt-like-java-until-i-found-this-share-7432376802641285120-me_t/?utm_source=social_share_send&utm_medium=android_app&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI&utm_campaign=copy_link
 
 - https://www.guvi.in/hub/java-tutorial/
+- https://www.tutorialspoint.com/java/java_multithreading.htm
 
 1. https://www.onlineinterviewquestions.com/core-java-interview-questions/
 2. Interview Bit: https://www.interviewbit.com/java-interview-questions/
