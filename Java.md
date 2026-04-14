@@ -12,6 +12,7 @@
 4. Best resource for MCQ : Safoundry - : https://www.sanfoundry.com/java-questions-answers-freshers-experienced/
 5. https://www.guru99.com/java-interview-questions-answers.html
 6. https://www.interviewbit.com/java-interview-questions/
+7. https://www.slideshare.net/slideshow/java-interview-questions-and-answers-spring-and-hibernate-interview-questions-java-tutorial-edureka/75390405
 
 - https://www.placementpreparation.io/blog/java-interview-questions-for-freshers/
 - https://www.placementpreparation.io/mcq/java/
@@ -19,6 +20,12 @@
 - https://www.guvi.in/hub/java-programs-tutorial/
 - https://www.guvi.in/hub/java-tutorial/introduction-to-multithreading/
 - https://www.placementpreparation.io/blog/java-interview-questions-for-freshers/
+
+### Banger PPTs
+
+- https://www.slideshare.net/slideshow/string-string-builder-string-buffer/167659127
+- https://www.slideshare.net/slideshow/java-multithreading-and-concurrency/30115533
+- https://www.slideshare.net/slideshow/java-interview-questions-and-answers-spring-and-hibernate-interview-questions-java-tutorial-edureka/75390405
 
 ### Spring & Springboot
 
