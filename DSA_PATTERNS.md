@@ -25,6 +25,10 @@
 - https://docs.google.com/document/d/16m8RGKmFF1zJSSItgZQPJhdwrbGVz4dOKhQY6LmZ7RM/edit?usp=sharing
 - https://www.linkedin.com/posts/akashsinnghh_heres-how-id-restart-dsa-prep-if-i-were-share-7433716394468446208-Yfff/?utm_source=share&utm_medium=member_android&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI
 
+## Top 50 Interview
+
+- https://www.linkedin.com/posts/sahil-hans_top-50-dsa-interview-questions-in-java-ugcPost-7448069413074915328-PANE?utm_source=social_share_send&utm_medium=android_app&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI&utm_campaign=copy_link
+
 ## Notion/Excel
 
 - https://www.notion.so/2e060ce6ae9180eb9afcc43afa112c69?v=2e060ce6ae91810881dd000cffea345e&source=copy_link
