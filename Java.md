@@ -6,6 +6,7 @@
 - https://www.guvi.in/hub/java-tutorial/
 - https://www.tutorialspoint.com/java/java_multithreading.htm
 - https://www.geeksforgeeks.org/java/java/
+- https://smartprogramming.in/tutorials/java/java-introduction
 
 ### Interview Prep
 
