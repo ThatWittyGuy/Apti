@@ -24,6 +24,19 @@
 - https://www.guvi.in/hub/java-tutorial/introduction-to-multithreading/
 - https://www.placementpreparation.io/blog/java-interview-questions-for-freshers/
 
+### YT
+
+- Smart Programming Java: https://youtube.com/playlist?list=PLlhM4lkb2sEhfuXL-2BDrJ67WkUdQ2v9b&si=DoQ7qjh68opDV2cC
+- OOP: https://www.youtube.com/playlist?list=PLlhM4lkb2sEhf5NlWeYh_gdcN49pHjVP0
+- Multithreading: https://www.youtube.com/playlist?list=PLlhM4lkb2sEh1pBs0KBb63PlKKqRx6M1a
+- Collection Framework: https://www.youtube.com/playlist?list=PLlhM4lkb2sEiOcuH1g-CUuU288qmMNpyj
+
+- @codewithease-byvarsha : https://www.youtube.com/playlist?list=PLBBK9G6O8MPBosgokQfKpo8Aj6yq49whX
+- Array: https://www.youtube.com/playlist?list=PLBBK9G6O8MPDr9LdgV5HDmn9KGcTnOC9r
+- Multithreading: https://www.youtube.com/playlist?list=PLBBK9G6O8MPDEeSVG17Pwya2xlUNbZn30
+
+- Others: Telusko, Engineering Digest, CodeWithAryanMittal, Riddhi Dutta, CodewithAmigo
+
 ### Banger PPTs
 
 - https://www.slideshare.net/slideshow/string-string-builder-string-buffer/167659127
