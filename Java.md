@@ -17,6 +17,7 @@
 5. https://www.guru99.com/java-interview-questions-answers.html
 6. https://www.interviewbit.com/java-interview-questions/
 7. https://www.slideshare.net/slideshow/java-interview-questions-and-answers-spring-and-hibernate-interview-questions-java-tutorial-edureka/75390405
+8. https://medium.com/@javalearners/concurrency-2-executor-framework-interview-questions-part-1-da026877948d?source=user_profile_page---------10-------------4588a3cd4a97----------------------
 
 - https://www.placementpreparation.io/blog/java-interview-questions-for-freshers/
 - https://www.placementpreparation.io/mcq/java/
