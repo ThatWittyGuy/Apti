@@ -1,6 +1,9 @@
 ### SQL:
 
 - 154 pages: https://www.linkedin.com/posts/kashishkathuria_sql-notes-ugcPost-7448207717556617216--B_z?utm_source=social_share_send&utm_medium=android_app&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI&utm_campaign=copy_link
+- 131 SQL questions: https://www.adaface.com/blog/sql-coding-interview-questions/
+
+<hr>
 
 - https://www.geeksforgeeks.org/sql/30-days-of-sql-from-basic-to-advanced-level/
 - https://www.interviewbit.com/sql-interview-questions/
@@ -19,3 +22,4 @@
 - https://www.w3resource.com/sql-exercises/
 - https://www.placementpreparation.io/blog/sql-interview-questions-for-freshers/
 - https://www.placementpreparation.io/programming-exercises/sql/advanced/
+- SQL Joins: https://www.scribd.com/document/451119458/ANSWERS-OF-JOINS
