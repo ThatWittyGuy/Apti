@@ -10,6 +10,7 @@
 
 ### Interview Prep
 
+0. https://www.geeksforgeeks.org/java/java-interview-questions/
 1. https://www.onlineinterviewquestions.com/core-java-interview-questions/
 2. Interview Bit: https://www.interviewbit.com/java-interview-questions/
 3. 150+ MCQS: https://www.placementpreparation.io/mcq/java/

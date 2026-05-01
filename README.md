@@ -11,3 +11,8 @@
 - https://www.guvi.in/hub/java-tutorial/
 - Debugging: https://www.guvi.in/debugging/
 - https://github.com/liquidslr/interview-company-wise-problems
+- https://www.geeksforgeeks.org/java/java-interview-questions/
+
+## C++
+
+- https://www.geeksforgeeks.org/cpp/cpp-interview-questions/
