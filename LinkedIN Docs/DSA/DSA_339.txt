@@ -1,0 +1,385 @@
+# DSA Question Bank
+
+## Arrays, Hashing, Prefix/Suffix
+
+1. Find the second largest element in one pass without extra space.
+2. Find the k largest distinct elements without fully sorting the array.
+3. Find the two numbers that appear once when every other number appears twice.
+4. Find the majority element that appears more than n / 2 times.
+5. Find all elements that appear more than n / 3 times.
+6. Count inversions in an array.
+7. Find the intersection of two arrays, including handling duplicates.
+8. Find common elements across three sorted arrays in linear time.
+9. Merge three sorted arrays into one sorted array with duplicates removed.
+10. Find the longest consecutive sequence in an unsorted array.
+11. Find the maximum subarray sum.
+12. Find the maximum product subarray.
+13. Compute the product of array except self.
+14. Find the first missing positive integer.
+15. Find the repeated number and the missing number in one pass or near-linear time.
+16. Count distinct pairs with difference equal to k.
+17. Count the number of subarrays whose sum is exactly k.
+18. Count the number of subarrays whose sum is divisible by k.
+19. Count the number of subarrays with equal numbers of 0s and 1s.
+20. Find the length of the longest zero-sum subarray.
+21. Find an equilibrium or pivot index.
+22. Find the length of the longest run of consecutive 1s in a binary array.
+23. Partition an array into four non-empty parts so the gap between the maximum segment sum and minimum segment sum is minimized.
+24. Rearrange a stream of three kinds of objects so equal objects are grouped together.
+
+## Strings and Pattern Matching
+
+25. Find the longest common prefix of a list of strings.
+26. Check whether a string is a palindrome after ignoring case and punctuation.
+27. Decide whether removing at most one character can make a string a palindrome.
+28. Find the first non-repeating character in a string.
+29. Compress a string in place.
+30. Determine whether two strings are anagrams.
+31. Group a list of strings into anagram buckets.
+32. Find the lexicographically smallest string obtainable by removing at most one character.
+33. Count the number of ways to decode a digit string to letters.
+34. Given an equation string with one unknown X, compute X.
+35. Reverse a string in blocks or chunks of size k.
+36. Count how many distinct strings are possible after exactly one swap.
+37. Reorganize a string so no two adjacent characters are the same.
+38. Convert Roman numerals to integers.
+39. Find the longest palindromic substring.
+40. Find the longest palindromic subsequence.
+41. Find the length of the longest substring without repeating characters.
+42. Find the longest substring with at most k distinct characters.
+43. Find the minimum window substring containing all characters of another string.
+44. Count subsequences that start with one character and end with another.
+45. Implement substring search using KMP.
+46. Perform pattern search using the Z algorithm or rolling hash.
+47. Decode bracket-encoded strings such as 3[a2[c]].
+48. Validate abbreviations or shorthand forms like i18n or A2S.
+
+## Sorting, Search, Binary Search on Answer
+
+49. Find an integer square root or a square root to fixed precision.
+50. Search in a row-wise and column-wise sorted matrix.
+51. Find the first and last occurrence of a target in a sorted array.
+52. Search in a rotated sorted array.
+53. Find the minimum element in a rotated sorted array.
+54. Find the median of two sorted arrays.
+55. Use binary search on answer to minimize the maximum pages or tasks assigned.
+56. Find the kth smallest element in a sorted matrix.
+57. Find the point where the maximum number of intervals overlap.
+58. Find the minimum number of platforms or rooms needed for intervals.
+59. Find the next greater number using the same digits.
+60. Search a value in an infinite or unknown-size sorted array.
+61. Maximize the minimum distance between placed items using binary search on answer.
+62. Find the minimum feasible ship capacity to deliver packages within d days.
+63. Split an array to minimize the largest segment sum.
+64. Find the minimum feasible time to finish trips, jobs, or machines using a monotonic predicate.
+65. Find a peak element.
+66. Find the k closest elements in a sorted array.
+
+## Two Pointers and Sliding Window
+
+67. Find the maximum consecutive 1s if you may flip at most k zeroes.
+68. Find the minimum-length subarray with sum at least a target.
+69. Find the maximum sum or average of a fixed-size window.
+70. Find the maximum profit from one stock transaction.
+71. Find the maximum profit from multiple stock transactions.
+72. Compute trapped rain water.
+73. Remove duplicates from a sorted array in place.
+74. Solve two-sum in a sorted array.
+75. Find all triplets with sum zero or equal to a target.
+76. Find all quadruplets with sum equal to a target.
+77. Find the container with the most water.
+78. Count the number of subarrays with product less than k.
+79. Solve Fruit Into Baskets or longest subarray with at most two distinct values.
+80. Find the longest repeating-character window after changing at most k characters.
+81. Move all zeroes to the end while preserving relative order.
+82. Merge two sorted arrays in place.
+83. Return the sorted squares of a sorted array.
+84. Find the minimum swaps needed to group all elements less than or equal to k together.
+
+## Stacks, Queues, Deques, Monotonic Structures
+
+85. Evaluate a postfix expression.
+86. Convert an infix expression to postfix.
+87. Implement a queue using two stacks.
+88. Implement a stack using queues.
+89. Design a min stack.
+90. Find the next greater element for every array item.
+91. Find the next smaller element for every array item.
+92. Find the sliding window maximum using a deque or monotonic queue.
+93. Evaluate an arithmetic expression with operators and parentheses.
+94. Print the first non-repeating character at every step of a character stream.
+95. Check for balanced parentheses or brackets.
+96. Find the largest rectangle in a histogram.
+97. Find the maximal rectangle in a binary matrix.
+98. Solve Daily Temperatures.
+99. Solve Stock Span.
+100. Find the next greater element in a circular array.
+101. Remove k digits to form the smallest possible number.
+102. Simplify a Unix-style path.
+103. Resolve collision-style stack simulations such as Asteroid Collision.
+
+## Linked Lists
+
+104. Reverse a singly linked list.
+105. Reverse a linked list in groups of size k.
+106. Detect a loop in a linked list.
+107. Find the starting node of the loop in a linked list.
+108. Find the middle node of a linked list.
+109. Remove the nth node from the end.
+110. Merge two sorted linked lists.
+111. Sort a linked list using merge sort.
+112. Clone a linked list with random pointer.
+113. Insert into a sorted circular linked list when only an arbitrary node is given.
+114. Find the intersection point of two linked lists.
+115. Check whether a linked list is a palindrome.
+116. Select a random node from a singly linked list.
+117. Add two numbers represented by linked lists.
+118. Flatten a multilevel linked list.
+119. Reorder a linked list by odd and even positions or partition it around a pivot.
+
+## Trees and BST
+
+120. Find the maximum depth of a binary tree.
+121. Find the minimum depth of a binary tree.
+122. Perform level-order traversal.
+123. Perform zigzag level-order traversal.
+124. Perform vertical-order traversal.
+125. Print the top view or bottom view of a binary tree.
+126. Perform diagonal traversal.
+127. Print the left view or right view of a binary tree.
+128. Perform boundary traversal.
+129. Compute the sum of leaf nodes at the minimum level.
+130. Solve root-to-leaf path sum existence.
+131. Print all root-to-leaf paths whose sum equals a target.
+132. Compute range sum in a BST.
+133. Find two nodes in a BST whose values sum to k.
+134. Find the inorder successor in a BST.
+135. Find the predecessor and successor of a key in a BST.
+136. Find the lowest common ancestor in a binary tree.
+137. Find the lowest common ancestor in an N-ary tree.
+138. Check whether a binary tree is height-balanced.
+139. Find the largest subtree that is also a BST.
+140. Build or reason about a tree from inorder and level-order traversal.
+141. Find the maximum sum of tree nodes such that no two adjacent nodes are chosen.
+142. Compute the diameter of a binary tree.
+143. Find the maximum width of a binary tree.
+144. Count good nodes in a binary tree.
+145. Count univalue subtrees.
+146. Find all nodes at distance k from a target node.
+147. Find the amount of time needed to infect an entire binary tree from a start node.
+148. Serialize and deserialize a binary tree.
+149. Reverse the odd levels of a binary tree.
+150. Convert a BST into a greater-sum tree.
+151. Find leaves of a binary tree in rounds.
+152. Turn a binary tree upside down under a specified parent-child transform.
+153. Check whether one tree is a subtree of another.
+154. Find the closest value or k closest values in a BST.
+155. Compute the maximum path sum in a binary tree.
+
+## Heaps and Priority Queues
+
+156. Find the kth smallest or kth largest element in an array.
+157. Merge k sorted linked lists.
+158. Merge k sorted arrays and optionally remove duplicates.
+159. Maintain the median of a data stream.
+160. Find the top-k frequent elements.
+161. Implement heap sort and explain heapify.
+162. Connect ropes or merge files with minimum total cost.
+163. Find the smallest range covering at least one element from each of k lists.
+164. Maximize capital or profit under project-selection constraints such as IPO.
+165. Find the k closest points to the origin.
+166. Sort a nearly sorted array where each element is at most k positions away.
+167. Maintain the kth largest element in a stream.
+168. Schedule tasks with cooldown constraints using a heap-based strategy.
+169. Find the number of rooms needed for meetings using a min-heap.
+170. Sort characters by frequency using a heap.
+
+## Intervals, Greedy, Sweep Line
+
+171. Merge overlapping intervals.
+172. Insert an interval into a sorted non-overlapping list.
+173. Find interval intersections between two lists.
+174. Check whether all meetings can be attended; if not, find the required number of rooms.
+175. Solve the lemonade change greedy simulation.
+176. Solve Jump Game.
+177. Solve Jump Game II or minimum jumps to reach the end.
+178. Find the minimum number of taps needed to water a garden.
+179. Find the peak number of concurrent intervals.
+180. Solve the gas station complete-circuit problem.
+181. Perform activity selection or maximize the number of non-overlapping intervals.
+182. Find the minimum number of intervals to remove so the rest do not overlap.
+183. Partition a string or label sequence greedily so each symbol appears in at most one part.
+184. Solve car-pooling or capacity scheduling with a sweep-line technique.
+185. Solve job sequencing with deadlines and profits.
+186. Find the minimum number of arrows to burst all balloons.
+187. Distribute candy subject to neighbor constraints.
+188. Assign cookies or resources greedily to maximize satisfied demand.
+189. Reconstruct a queue by height and position constraints.
+190. Solve reverse-greedy transformations such as Broken Calculator.
+
+## Graphs
+
+191. Solve course schedule by detecting a cycle in a directed graph.
+192. Perform topological sort.
+193. Find the shortest path in an unweighted graph using BFS.
+194. Find the shortest path in a weighted graph using Dijkstra's algorithm.
+195. Find the shortest path in a binary maze.
+196. Find the shortest path in a binary matrix.
+197. Find the minimum knight moves and print one valid path.
+198. Count the number of islands.
+199. Count the number of distinct islands.
+200. Find the maximum area of an island.
+201. Solve rotten oranges with multi-source BFS.
+202. Clone a graph.
+203. Detect a cycle in an undirected graph.
+204. Detect a cycle in a directed graph.
+205. Check whether a graph is bipartite.
+206. Find a minimum spanning tree.
+207. Perform flood fill.
+208. Solve Word Ladder.
+209. Solve the water jug problem both as state-space search and with gcd reasoning.
+210. Count the number of connected components in a graph.
+211. Process dynamic island additions or Number of Islands II with DSU.
+212. Find critical connections or bridges in a network.
+213. Find articulation points in a graph.
+214. Find eventual safe states in a directed graph.
+215. Infer an alien dictionary order from sorted words.
+216. Solve Network Delay Time.
+217. Find the cheapest flight within k stops.
+218. Solve Open the Lock.
+219. Solve Snakes and Ladders with BFS.
+220. Determine whether all rooms can be visited in Keys and Rooms.
+221. Find a path with minimum effort in a grid.
+222. Solve Swim in Rising Water.
+223. Merge accounts using a graph or DSU.
+224. Evaluate division queries on a graph.
+225. Find a redundant connection.
+226. Find the minimum cost to connect all points.
+227. Find the shortest path with alternating edge colors.
+228. Enumerate all paths from source to target in a DAG.
+
+## Backtracking and Recursion
+
+229. Solve Rat in a Maze.
+230. Solve N-Queens.
+231. Solve Sudoku.
+232. Generate all permutations of an array or string.
+233. Generate the power set or all subsets.
+234. Solve Combination Sum and its common variants.
+235. Partition a string into palindromic pieces.
+236. Generate balanced parentheses.
+237. Solve Word Search in a grid.
+238. Generate all palindrome permutations of a string.
+239. Generate all letter combinations of a phone number.
+240. Restore all valid IP addresses from a digit string.
+241. Partition an array into k equal-sum subsets.
+242. Insert operators into a digit string to reach a target value.
+243. Solve graph coloring or M-coloring.
+244. Form a square from matchsticks or solve equivalent subset-assignment backtracking.
+245. Generate unique permutations when duplicates are present.
+
+## Dynamic Programming
+
+246. Count ways to reach the nth stair and common variants.
+247. Find the minimum cost to climb stairs.
+248. Solve longest common subsequence.
+249. Solve longest increasing subsequence.
+250. Solve 0/1 knapsack.
+251. Solve unbounded knapsack or rod cutting.
+252. Find the maximum sum of non-adjacent elements.
+253. Solve House Robber.
+254. Solve House Robber II.
+255. Solve decode ways.
+256. Solve edit distance.
+257. Solve coin change for minimum coins.
+258. Solve coin change for number of ways.
+259. Count matrix paths with blocked cells.
+260. Find the minimum path sum in a grid.
+261. Find the minimum-cost path in a grid with constrained moves.
+262. Find the maximum path sum in a matrix.
+263. Solve partition equal subset sum.
+264. Solve longest palindromic subsequence.
+265. Count distinct subsequences.
+266. Solve wildcard matching.
+267. Solve regex-style matching with . and *.
+268. Print the maximum number of As using four keys.
+269. Count square submatrices with all ones.
+270. Solve Word Break.
+271. Solve Word Break II.
+272. Solve interleaving string.
+273. Find the longest arithmetic subsequence.
+274. Solve Paint House or minimum-cost coloring variants.
+275. Solve weighted job scheduling or maximum profit in job scheduling.
+276. Solve Burst Balloons.
+277. Solve matrix chain multiplication.
+278. Solve Boolean Parenthesization.
+279. Find the longest increasing path in a matrix.
+280. Solve Cherry Pickup or its common 2-agent grid variants.
+281. Find the maximum subarray sum with one deletion.
+282. Solve DP on trees or ancestor-jump queries with many queries.
+
+## Tries, Segment Trees, DSU, Fenwick, Binary Lifting
+
+283. Find the longest common prefix using a trie.
+284. Build a trie for insert, search, and prefix autocomplete.
+285. Build a word dictionary that supports wildcard queries.
+286. Design search suggestions or autocomplete using a trie.
+287. Solve maximum XOR or XOR queries with a trie.
+288. Replace words in a sentence using dictionary roots stored in a trie.
+289. Solve Word Search II using trie plus backtracking.
+290. Build a segment tree for range min, max, or sum queries.
+291. Use a segment tree with a custom range condition such as max - min < k.
+292. Use a Fenwick tree or BIT for prefix sums and inversion-style queries.
+293. Count inversions using a BIT or segment tree.
+294. Support range updates and point queries with a BIT or segment tree.
+295. Implement disjoint set union with path compression and union by rank.
+296. Use DSU for component counting, merges, and connectivity queries.
+297. Use binary lifting for kth ancestor or jump queries on a tree.
+298. Use a sparse table for static range minimum or maximum query.
+299. Explain or implement external sorting for data larger than memory.
+300. Design an iterator over k sorted lists or streams.
+301. Design a structure that supports add(x) and query(largest <= x).
+302. Design an inverted index or word-search engine over a document collection.
+
+## Custom Data Structure Design
+
+303. Design an LRU cache.
+304. Design a modified LRU cache where values are lists and a get consumes from the front.
+305. Design a string-keyed photo cache or similar cache with eviction policy.
+306. Design an LFU cache.
+307. Design an All O(1) data structure supporting frequency updates.
+308. Design a RandomizedSet with O(1) insert, delete, and get-random.
+309. Design a RandomizedCollection that allows duplicates.
+310. Design a time-based key-value store.
+311. Design a hit counter over a moving time window.
+312. Design browser history with back and forward navigation.
+313. Design a circular deque.
+314. Design a snapshot array.
+315. Design an in-memory file system path structure.
+316. Design a leaderboard with score updates and top-k queries.
+317. Design a stock price fluctuation tracker.
+318. Design a moving average over a data stream.
+
+## Bit Manipulation, Math, Number Theory, Simulation
+
+319. Compute Euler's totient function.
+320. Count trailing zeroes in a factorial.
+321. Compute fast power x^n in O(log n).
+322. Find the unique number when every other number appears three times.
+323. Count set bits from 1 to n.
+324. Check whether a number is a power of two or a power of four.
+325. Find a missing number and a repeated number using bit manipulation.
+326. Convert a number from one base to another.
+327. Convert a fraction to recurring decimal form.
+328. Use gcd or lcm reasoning for problems like the water jug puzzle.
+329. Generate Gray code.
+330. Add two integers without using +.
+331. Divide two integers without using /, *, or %.
+332. Generate primes in a range using sieve-based techniques.
+333. Compute modular exponentiation and reason about modular inverse basics.
+334. Check whether a number is a perfect square without directly using square root.
+335. Find the nth ugly number or its variants.
+336. Solve the bulb-switching problem.
+337. Count cubes with 0, 1, 2, or 3 painted faces after painting the outside of a cube.
+338. Handle square-root, exponentiation, overflow, and modular-arithmetic edge cases carefully in implementation.
+339. Convert an integer to Roman numeral form.
