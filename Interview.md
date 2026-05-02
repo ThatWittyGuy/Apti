@@ -8,3 +8,4 @@
 - https://www.geeksforgeeks.org/interview-experiences/quiz-corner-gq/
 - https://algomaster.io/learn/behavioral/what-are-behavioral-interviews
 - https://www.hellointerview.com/learn/behavioral/overview/introduction
+- https://devinterview.io/questions/behavioral-questions/behavioral-junior-interview-questions/
