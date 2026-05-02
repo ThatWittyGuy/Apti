@@ -1,5 +1,6 @@
 ## Roadmap/Sheet
 
+- https://www.geeksforgeeks.org/dsa/dsa-tutorial-learn-data-structures-and-algorithms/
 - https://algomaster.io/learn/dsa/course-roadmap
 - https://thita.ai/dsa-patterns-sheet
 - https://grindgram.in/career-tracks/curious-coding-sheet

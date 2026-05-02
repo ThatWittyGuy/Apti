@@ -1,3 +1,5 @@
+- https://www.geeksforgeeks.org/system-design/system-design-tutorial/
+
 ## Blogs
 
 - https://www.hellointerview.com/learn/system-design/in-a-hurry/introduction
