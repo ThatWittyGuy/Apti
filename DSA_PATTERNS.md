@@ -8,6 +8,10 @@
 - https://algomaster.io/practice/dsa-patterns
 - https://drive.google.com/file/d/1Nfq97UIGoXEiyuEUpYLzjARN_quVoxpQ/view
 
+## Pattern Wise Questions
+
+- https://www.geeksforgeeks.org/dsa/top-50-string-coding-problems-for-interviews/
+
 ## Patterns
 
 - https://www.blog.codeinmotion.io/p/leetcode-patterns
