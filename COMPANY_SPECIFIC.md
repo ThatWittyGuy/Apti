@@ -7,6 +7,8 @@
 - https://algo.monster/interview-guides
 - https://www.placementpreparation.io/company-specific/aptitude/
 - _GOAT_: https://www.guvi.in/hub/
+- https://interviewsolver.com/interview-questions
+- https://interviewsolver.com/interview-questions/nvidia
 
 ### Barclays
 
