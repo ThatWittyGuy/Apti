@@ -21,6 +21,8 @@
 
 - https://www.linkedin.com/posts/sahil-hans_if-youre-preparing-for-system-design-interviews-share-7446872430381330432-LrrV?utm_source=social_share_send&utm_medium=android_app&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI&utm_campaign=copy_link
 
+- https://www.linkedin.com/posts/aryan-raskar-077640253_i-have-researched-lots-of-product-based-companies-share-7458873345380413441-E1rT?utm_source=share&utm_medium=member_android&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI
+
 ## YT
 
 - https://www.youtube.com/playlist?list=PLPtUyMfD0mNJDZg50fg2CptjLBavHot47
