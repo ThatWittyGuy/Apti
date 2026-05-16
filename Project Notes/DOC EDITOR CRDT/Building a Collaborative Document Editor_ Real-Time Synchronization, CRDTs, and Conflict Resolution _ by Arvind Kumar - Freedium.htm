@@ -1,0 +1,1094 @@
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Building a Collaborative Document Editor: Real-Time Synchronization, CRDTs, and Conflict Resolution | by Arvind Kumar - Freedium</title>
+    
+    <meta name="description" content="How does Google Docs allow thousands of users to edit the same document simultaneously without...">
+    <meta name="keywords" content="medium, paywall, medium.com, paywall breakthrough">
+
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <!--<script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>-->
+
+    <script src="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/tailwindcssv3-freedium-hotfix.js"></script>
+
+    <link href="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/unbound.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://freedium-mirror.cfd/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://freedium-mirror.cfd/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://freedium-mirror.cfd/favicon-16x16.png">
+    <link rel="manifest" href="https://freedium-mirror.cfd/site.webmanifest">
+    <link rel="mask-icon" href="https://freedium-mirror.cfd/safari-pinned-tab.svg" color="#00aba9">
+    <meta name="msapplication-TileColor" content="#00aba9">
+    <meta name="theme-color" content="#ffffff">
+    <script src="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/highlight.min.js"></script>
+    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.4/dist/lazyload.min.js"></script> -->
+    <script src="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/lightense.min.js"></script>
+
+    <script>
+        window._resizeIframe = function (obj) {
+            const logMessage = `Received _resizeIframe call: iframe=${obj.iframe ? obj.iframe.id : 'unknown'}, height=${obj.height}`;
+            if (obj.iframe) {
+                obj.iframe.height = obj.height;
+            }
+            console.log(obj.iframe)
+            console.log(logMessage);
+        };
+    </script>
+
+    <script>
+        window.addEventListener('message', function (event) {
+            console.log('Event data:', JSON.stringify(event.data))
+            if (typeof event.data === 'string') {
+                let parsedData = JSON.parse(event.data);
+                console.log('Event data type:', typeof parsedData)
+                if (parsedData && parsedData.method === 'iframe.resize' && parsedData.context === 'iframe.resize') {
+                    console.log('Resizing iframe - Source:', parsedData.src, 'Height:', parsedData.height, 'Method:', parsedData.method)
+                    const iframes = document.querySelectorAll('iframe');
+                    for (let iframe of iframes) {
+                        if (iframe.src === parsedData.src) {
+                            console.log('Setting iframe height to:', parsedData.height)
+                            console.log(iframe)
+                            iframe.height = parsedData.height;
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <style>
+        .responsive-object {
+            position: relative;
+            height: 0;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .responsive-object iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.15 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.bottom-0{bottom:0px}.bottom-4{bottom:1rem}.left-4{left:1rem}.right-0{right:0px}.right-5{right:1.25rem}.top-0{top:0px}.top-5{top:1.25rem}.z-20{z-index:20}.m-1\.5{margin:0.375rem}.m-2{margin:0.5rem}.m-auto{margin:auto}.mx-auto{margin-left:auto;margin-right:auto}.my-8{margin-top:2rem;margin-bottom:2rem}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mr-3{margin-right:0.75rem}.mt-0{margin-top:0px}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-3{margin-top:0.75rem}.mt-4{margin-top:1rem}.mt-5{margin-top:1.25rem}.mt-7{margin-top:1.75rem}.mt-8{margin-top:2rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.hidden{display:none}.h-1{height:0.25rem}.h-11{height:2.75rem}.h-3{height:0.75rem}.h-full{height:100%}.max-h-\[95vh\]{max-height:95vh}.max-h-screen{max-height:100vh}.w-11{width:2.75rem}.w-11\/12{width:91.666667%}.w-3{width:0.75rem}.w-full{width:100%}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.flex-grow{flex-grow:1}.list-decimal{list-style-type:decimal}.list-disc{list-style-type:disc}.appearance-none{-webkit-appearance:none;appearance:none}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.space-x-2 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.5rem * var(--tw-space-x-reverse));margin-left:calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-4 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1rem * var(--tw-space-x-reverse));margin-left:calc(1rem * calc(1 - var(--tw-space-x-reverse)))}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.break-normal{overflow-wrap:normal;word-break:normal}.break-words{overflow-wrap:break-word}.rounded{border-radius:0.25rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.border{border-width:1px}.border-2{border-width:2px}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.border-gray-600{--tw-border-opacity:1;border-color:rgb(75 85 99 / var(--tw-border-opacity, 1))}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-blue-500{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.bg-blue-700{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-gray-300{--tw-bg-opacity:1;background-color:rgb(209 213 219 / var(--tw-bg-opacity, 1))}.bg-gray-500{--tw-bg-opacity:1;background-color:rgb(107 114 128 / var(--tw-bg-opacity, 1))}.bg-gray-600{--tw-bg-opacity:1;background-color:rgb(75 85 99 / var(--tw-bg-opacity, 1))}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231 / var(--tw-bg-opacity, 1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-red-500{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-yellow-500{--tw-bg-opacity:1;background-color:rgb(234 179 8 / var(--tw-bg-opacity, 1))}.bg-opacity-50{--tw-bg-opacity:0.5}.fill-current{fill:currentColor}.p-1\.5{padding:0.375rem}.p-2{padding:0.5rem}.p-4{padding:1rem}.p-1{padding:0.25rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-2{padding-bottom:0.5rem}.pb-3{padding-bottom:0.75rem}.pl-4{padding-left:1rem}.pl-8{padding-left:2rem}.pr-4{padding-right:1rem}.pt-1{padding-top:0.25rem}.pt-12{padding-top:3rem}.pt-20{padding-top:5rem}.pt-3{padding-top:0.75rem}.pt-5{padding-top:1.25rem}.pt-6{padding-top:1.5rem}.pt-8{padding-top:2rem}.text-left{text-align:left}.text-center{text-align:center}.font-sans{font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-base{font-size:1rem;line-height:1.5rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-semibold{font-weight:600}.leading-8{line-height:2rem}.leading-normal{line-height:1.5}.leading-tight{line-height:1.25}.text-black{--tw-text-opacity:1;color:rgb(0 0 0 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.text-green-500{--tw-text-opacity:1;color:rgb(34 197 94 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-yellow-500{--tw-text-opacity:1;color:rgb(234 179 8 / var(--tw-text-opacity, 1))}.no-underline{-webkit-text-decoration-line:none;text-decoration-line:none}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:border-green-500:hover{--tw-border-opacity:1;border-color:rgb(34 197 94 / var(--tw-border-opacity, 1))}.hover\:bg-blue-600:hover{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-700:hover{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-800:hover{--tw-bg-opacity:1;background-color:rgb(30 64 175 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-700:hover{--tw-bg-opacity:1;background-color:rgb(55 65 81 / var(--tw-bg-opacity, 1))}.hover\:bg-red-600:hover{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.hover\:bg-yellow-600:hover{--tw-bg-opacity:1;background-color:rgb(202 138 4 / var(--tw-bg-opacity, 1))}.hover\:text-gray-900:hover{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.hover\:underline:hover{-webkit-text-decoration-line:underline;text-decoration-line:underline}.hover\:no-underline:hover{-webkit-text-decoration-line:none;text-decoration-line:none}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-blue-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(59 130 246 / var(--tw-ring-opacity, 1))}.dark\:border-gray-700:is(.dark *){--tw-border-opacity:1;border-color:rgb(55 65 81 / var(--tw-border-opacity, 1))}.dark\:bg-gray-600:is(.dark *){--tw-bg-opacity:1;background-color:rgb(75 85 99 / var(--tw-bg-opacity, 1))}.dark\:bg-gray-800:is(.dark *){--tw-bg-opacity:1;background-color:rgb(31 41 55 / var(--tw-bg-opacity, 1))}.dark\:bg-gray-900:is(.dark *){--tw-bg-opacity:1;background-color:rgb(17 24 39 / var(--tw-bg-opacity, 1))}.dark\:bg-green-700:is(.dark *){--tw-bg-opacity:1;background-color:rgb(21 128 61 / var(--tw-bg-opacity, 1))}.dark\:bg-green-800:is(.dark *){--tw-bg-opacity:1;background-color:rgb(22 101 52 / var(--tw-bg-opacity, 1))}.dark\:bg-zinc-800:is(.dark *){--tw-bg-opacity:1;background-color:rgb(39 39 42 / var(--tw-bg-opacity, 1))}.dark\:text-gray-100:is(.dark *){--tw-text-opacity:1;color:rgb(243 244 246 / var(--tw-text-opacity, 1))}.dark\:text-gray-200:is(.dark *){--tw-text-opacity:1;color:rgb(229 231 235 / var(--tw-text-opacity, 1))}.dark\:text-white:is(.dark *){--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.dark\:text-yellow-400:is(.dark *){--tw-text-opacity:1;color:rgb(250 204 21 / var(--tw-text-opacity, 1))}.dark\:hover\:text-white:hover:is(.dark *){--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}@media (min-width: 768px){.md\:inline{display:inline}.md\:max-w-3xl{max-width:48rem}.md\:max-w-4xl{max-width:56rem}.md\:max-w-xl{max-width:36rem}.md\:px-6{padding-left:1.5rem;padding-right:1.5rem}.md\:text-2xl{font-size:1.5rem;line-height:2rem}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}.md\:text-sm{font-size:0.875rem;line-height:1.25rem}.md\:text-xl{font-size:1.25rem;line-height:1.75rem}}@media (min-width: 1024px){.lg\:mt-0{margin-top:0px}.lg\:block{display:block}.lg\:flex{display:flex}.lg\:hidden{display:none}.lg\:w-auto{width:auto}.lg\:items-center{align-items:center}}</style><link rel="stylesheet" href="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/a11y-light.min.css"><style id="lightense-images-css">
+:root {
+  --lightense-z-index: 999999;
+  --lightense-backdrop: var(--bg-color-80, rgba(255, 255, 255, .98));
+  --lightense-duration: 300ms;
+  --lightense-timing-func: cubic-bezier(.2, 0, .1, 1);
+}
+
+.lightense-backdrop {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: calc(var(--lightense-z-index) - 1);
+  padding: 0;
+  margin: 0;
+  transition: opacity var(--lightense-duration) ease;
+  cursor: zoom-out;
+  opacity: 0;
+  background-color: var(--lightense-backdrop);
+  visibility: hidden;
+}
+
+@supports (-webkit-backdrop-filter: blur(30px)) {
+  .lightense-backdrop {
+    background-color: var(--lightense-backdrop);
+    -webkit-backdrop-filter: blur(30px);
+  }
+}
+
+@supports (backdrop-filter: blur(30px)) {
+  .lightense-backdrop {
+    background-color: var(--lightense-backdrop);
+    backdrop-filter: blur(30px);
+  }
+}
+
+.lightense-wrap {
+  position: relative;
+  transition: transform var(--lightense-duration) var(--lightense-timing-func);
+  z-index: var(--lightense-z-index);
+  pointer-events: none;
+}
+
+.lightense-target {
+  cursor: zoom-in;
+  transition: transform var(--lightense-duration) var(--lightense-timing-func);
+  pointer-events: auto;
+}
+
+.lightense-open {
+  cursor: zoom-out;
+}
+
+.lightense-transitioning {
+  pointer-events: none;
+}</style><script type="text/javascript" src="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/fixHeadlessAudio.js"></script></head>
+<body class="bg-white dark:bg-gray-800"><div class="fixed bottom-4 left-4 hidden" style="z-index: 999999;">
+    <button id="openProblemModal" class="m-1.5 flex items-center bg-red-500 text-white py-2 px-4 rounded-full shadow-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+            <style>
+                svg {
+                    fill: #ffffff
+                }
+            </style>
+            <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"></path>
+        </svg>
+    </button>
+    <button id="darkModeToggle" class="m-1.5 flex items-center bg-blue-500 text-white py-2 px-4 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none">
+        <svg id="darkIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512" class="hidden">
+            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+            <path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"></path>
+        </svg>
+        <!-- SVG icon for light mode (e.g., a sun) -->
+        <svg class="" id="lightIcon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+            <path d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"></path>
+        </svg>
+    </button>
+</div>
+
+
+<div class="storage-notification-container fixed top-5 right-5 p-2 max-h-[95vh] overflow-y-auto hidden" style="z-index: 999999;">
+    <div class="p-4 text-center bg-white border border-gray-300 rounded-md shadow-sm dark:bg-gray-800">
+        <p class="pb-2 text-xl text-black dark:text-white font-semibold">Milestone: 25GB Reached</p>
+        <p class="pb-3 text-black dark:text-white">
+            We’ve reached 25GB of stored data — thank you for helping us grow!
+        </p>
+        <div class="mt-4 space-x-2">
+            <a href="https://patreon.com/Freedium" rel="noreferrer" target="_blank" title="Patreon">
+                <button class="px-3 py-2 font-semibold text-white bg-red-500 rounded hover:bg-red-600 transition-colors">
+                    Patreon
+                </button>
+            </a>
+            <a href="https://ko-fi.com/zhymabekroman" rel="noreferrer" target="_blank" title="Ko-fi">
+                <button class="px-3 py-2 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors">
+                    Ko-fi
+                </button>
+            </a>
+            <a href="https://liberapay.com/ZhymabekRoman/" rel="noreferrer" target="_blank" title="Liberapay">
+                <button class="px-3 py-2 font-semibold text-white bg-yellow-500 rounded hover:bg-yellow-600 transition-colors">
+                    Liberapay
+                </button>
+            </a>
+            <a href="https://www.paypal.me/qHDa3" rel="noreferrer" target="_blank" title="PayPal">
+                <button class="px-3 py-2 font-semibold text-white bg-blue-700 rounded hover:bg-blue-800 transition-colors">
+                    PayPal
+                </button>
+            </a>
+        </div>
+        <div class="mt-3">
+            <button class="px-4 py-2 font-semibold text-white bg-gray-600 rounded hover:bg-gray-700 transition-colors storage-close-button">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<nav id="header" class="fixed top-0 w-full bg-white shadow z-9 dark:bg-gray-800 dark:text-white" style="z-index: 999990;">
+    
+    <div id="progress" class="top-0 z-20 h-1" style="background: linear-gradient(to right, #4dc0b5 var(--scroll), transparent 0); --scroll: Infinity%;"></div>
+    <div class="flex flex-wrap items-center justify-between w-full py-3 mx-auto mt-0 md:max-w-4xl">
+        <div class="pl-4">
+            <a class="text-base text-xl font-extrabold text-green-500 no-underline hover:no-underline" href="https://freedium-mirror.cfd/" onclick="navigateToOrigin()">Freedium</a>
+        </div>
+        <div class="block pr-4 lg:hidden">
+            <button id="nav-toggle" class="flex items-center px-3 py-2 text-gray-500 border border-gray-600 rounded appearance-none dark:text-white hover:text-gray-900 dark:hover:text-white hover:border-green-500 focus:outline-none">
+                <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <title>Menu</title>
+                    <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="flex-grow hidden w-full mt-2 bg-white lg:flex lg:items-center lg:w-auto lg:block lg:mt-0 dark:bg-gray-800" id="nav-content">
+            <ul class="items-center justify-end flex-1 list-reset lg:flex">
+                <li class="mr-3">
+                    <a class="inline-block text-gray-600 no-underline dark:text-white hover:text-gray-900 dark:hover:text-white hover:text-underline" href="https://ko-fi.com/zhymabekroman" target="_blank">ko-fi</a>
+                </li>
+                <!-- <li class="mr-3">
+                    <a class="inline-block text-gray-600 no-underline dark:text-white hover:text-gray-900 dark:hover:text-white hover:text-underline"
+                        href="https://codeberg.org/Freedium-cfd/web" target="_blank">source code</a>
+                </li>
+                <li class="mr-3">
+                    <a class="inline-block text-gray-600 no-underline dark:text-white hover:text-gray-900 dark:hover:text-white hover:text-underline"
+                        href="https://romans-status-page.vercel.app/status/freedium" target="_blank">status page</a>
+                </li> -->
+                <li class="mr-3">
+                    <a class="inline-block text-gray-600 no-underline dark:text-white hover:text-gray-900 dark:hover:text-white hover:text-underline" href="https://liberapay.com/ZhymabekRoman/" target="_blank" rel="noreferrer">librepay</a>
+                </li>
+                <li class="mr-3">
+                    <a class="inline-block text-gray-600 no-underline dark:text-white hover:text-gray-900 dark:hover:text-white hover:text-underline" href="https://patreon.com/Freedium" target="_blank" rel="noreferrer">patreon</a>
+                </li>
+                <li class="mr-3">
+                    <a class="inline-block text-gray-600 no-underline dark:text-white hover:text-gray-900 dark:hover:text-white hover:text-underline" href="https://www.paypal.me/qHDa3" target="_blank" rel="noreferrer">paypal</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container w-full pt-20 mx-auto text-gray-900 break-words bg-white md:max-w-3xl dark:text-gray-200 dark:bg-gray-800">
+    <div class="w-full px-4 text-xl leading-normal text-gray-800 md:px-6 dark:text-gray-100" style="font-family:Georgia,serif;">
+        
+        <div class="font-sans">
+            <p class="pb-3 text-base font-bold text-green-500 md:text-sm">
+                <a href="https://codefarm0.medium.com/building-a-collaborative-document-editor-real-time-synchronization-crdts-and-conflict-resolution-4743436639f5#bypass" class="text-sm font-bold text-green-500 no-underline md:text-sm hover:underline ">&lt; Go to the original</a>
+            </p>
+            
+                <img alt="Preview image" style="max-height: 65vh;
+                            width: auto;
+                            margin: auto" loading="eager" referrerpolicy="no-referrer" role="presentation" src="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/1_W2aX3eUEe01gOhVTFdE-Pw.png" class="lightense-target">
+            
+            <h1 class="pt-6 pb-2 font-sans text-3xl font-bold text-gray-900 break-normal dark:text-gray-100 md:text-4xl">Building a Collaborative Document Editor: Real-Time Synchronization, CRDTs, and Conflict Resolution</h1>
+            <h2 class="pt-1 font-sans font-medium text-gray-600 break-normal dark:text-gray-200 text-1xl md:text-1xl">How
+ does Google Docs allow thousands of users to edit the same document 
+simultaneously without conflicts? When you type a character, it…</h2>
+        </div>
+        <div class="m-2 mt-5 bg-gray-100 border border-gray-300 dark:bg-gray-600">
+            <div class="flex items-center p-4 space-x-4">
+                <div class="flex-shrink-0">
+                    <a href="https://medium.com/@codefarm0" target="_blank" title="Staff Engineer | System Design, Microservices, Java, SpringBoot, Kafka, DBs, AWS, GenAI | Teaching concepts via stories &amp; characters | linkedin.com/in/codefarm0" class="relative block">
+                        <img src="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/1_qLgT62h04Vn1WA1vdYL9lg.png" alt="Arvind Kumar" loading="eager" referrerpolicy="no-referrer" class="rounded-full h-11 w-11 no-lightense">
+                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                    </a>
+                </div>
+                <div class="flex-grow">
+                    <a href="https://medium.com/@codefarm0" target="_blank" title="Staff Engineer | System Design, Microservices, Java, SpringBoot, Kafka, DBs, AWS, GenAI | Teaching concepts via stories &amp; characters | linkedin.com/in/codefarm0" class="block font-semibold text-gray-900 dark:text-white">Arvind Kumar</a>
+                    <button class="px-3 py-1 mt-1 text-sm text-white bg-green-500 rounded-lg dark:bg-green-700">
+                        <a href="https://medium.com/@codefarm0" target="_blank" title="Staff Engineer | System Design, Microservices, Java, SpringBoot, Kafka, DBs, AWS, GenAI | Teaching concepts via stories &amp; characters | linkedin.com/in/codefarm0" class="block text-sm text-white">Follow</a>
+                    </button>
+                </div>
+            </div>
+            <div class="px-4 pb-2">
+                <div class="flex flex-wrap items-center space-x-2 text-sm text-gray-500 dark:text-white">
+                    
+                    <span class="text-gray-500 dark:text-white">a11y-light</span>
+                    <span class="md:inline">·</span>
+                    <span class="text-gray-500 dark:text-white">December 2, 2025 (Updated: December 4, 2025)</span>
+                    <span class="md:inline">·</span>
+                    <span class="text-yellow-500 dark:text-yellow-400">Free: No</span>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8 main-content">
+            <p class="leading-8 mt-3">How does Google Docs allow 
+thousands of users to edit the same document simultaneously without 
+conflicts? When you type a character, it appears on everyone's screen in
+ real-time. But what happens when two people type at the same position? 
+Or delete the same word? Let's design a collaborative editor that 
+handles it all.</p><blockquote style="box-shadow: inset 3px 0 0 0 rgb(209 207 239 / var(--tw-bg-opacity));" class="px-5 pt-3 pb-3 mt-5"><p class="font-italic"><a style="text-decoration: underline;" rel="" title="" href="https://codefarm0.medium.com/building-a-collaborative-document-editor-real-time-synchronization-crdts-and-conflict-resolution-4743436639f5?sk=3be8ca8e01c8f3c9bae77e1027a5162b" target="_blank">Full story for non-members</a> | <a style="text-decoration: underline;" rel="noopener" title="" href="https://topmate.io/codefarm/1333511" target="_blank">Grab My Microservices E-Book</a> | <a style="text-decoration: underline;" rel="noopener" title="" href="https://www.youtube.com/@codefarm0" target="_blank">Youtube</a> | <a style="text-decoration: underline;" rel="noopener" title="" href="https://www.linkedin.com/in/codefarm0/" target="_blank">LinkedIn</a> | <a style="text-decoration: underline;" rel="noopener" title="" href="https://topmate.io/codefarm" target="_blank">Book a 1:1 Meeting</a></p></blockquote><h3 id="0a94" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">A Real-World Problem</h3><p class="leading-8 mt-3"><strong>Aadvik (Interviewer):</strong>
+ "Sara, imagine you're building Google Docs. Multiple users are editing 
+the same document in real-time. User A types 'Hello' at position 0. User
+ B types 'World' at position 5. Meanwhile, User C deletes characters 
+from position 2–4. How do you ensure everyone sees the same final 
+document? How do you handle conflicts when operations arrive out of 
+order?"</p><p class="leading-8 mt-7"><strong>Sara (Candidate):</strong> <em>[Thoughtful pause]</em>
+ "This is the classic collaborative editing problem! In a single-user 
+editor, it's simple — just apply operations sequentially. But with 
+multiple concurrent editors, operations can arrive in different orders, 
+and we need to ensure all replicas converge to the same state. This 
+requires conflict-free synchronization algorithms."</p><p class="leading-8 mt-7"><strong>Aadvik:</strong>
+ "Exactly. Traditional version control (like Git) won't work — it's too 
+slow and requires manual merges. We need algorithms that automatically 
+resolve conflicts. Ready to design a real-time collaborative editor?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "Absolutely. Let me start with some clarifying questions:</p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">What's the scale? How many concurrent editors per document?</li><li class="mt-3">What operations do we need to support? Insert, delete, formatting?</li><li class="mt-3">What's the acceptable latency for seeing others' changes?</li><li class="mt-3">Do we need offline editing support?</li><li class="mt-3">How do we handle version history and undo/redo?</li><li class="mt-3">What about permissions and access control?"</li></ul><p class="leading-8 mt-7"><strong>Aadvik:</strong> "Great questions! Let's define the requirements:</p><h3 id="a00b" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">Part 1: Requirements, Core Challenges &amp; Scale Estimation</h3><h4 id="6650" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8"><strong>1. Functional Requirements:</strong></h4><ol class="pl-8 mt-2 list-decimal"><li class="mt-3">Create, edit, and delete documents</li><li class="mt-3">Real-time collaborative editing (multiple users simultaneously)</li><li class="mt-3">Text operations: insert, delete, format (bold, italic)</li><li class="mt-3">Version history and undo/redo</li><li class="mt-3">Document sharing and permissions</li><li class="mt-3">Presence awareness (show who's editing where)</li></ol><h4 id="eb95" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8"><strong>2. Non-Functional Requirements:</strong></h4><ol class="pl-8 mt-2 list-decimal"><li class="mt-3">Scale: 1000 concurrent editors per document (peak: 5000)</li><li class="mt-3">Latency: &lt;100ms for changes to appear on other clients</li><li class="mt-3">Availability: 99.9% (allows ~43 minutes downtime/month)</li><li class="mt-3">Consistency: Eventually consistent (all replicas converge to same state)</li><li class="mt-3">Conflict resolution: Automatic, no manual merges</li><li class="mt-3">Offline support: Allow editing offline, sync when online</li></ol><h4 id="e009" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8"><strong>3. Core Challenges:</strong></h4><ol class="pl-8 mt-2 list-decimal"><li class="mt-3"><strong>Concurrent Edits</strong>: Multiple users editing simultaneously</li><li class="mt-3"><strong>Operation Ordering</strong>: Operations arrive in different orders on different clients</li><li class="mt-3"><strong>Conflict Resolution</strong>: How to merge concurrent edits automatically</li><li class="mt-3"><strong>Causality</strong>: Ensuring operations that depend on each other are applied correctly</li><li class="mt-3"><strong>Scalability</strong>: Handling thousands of concurrent editors efficiently</li><li class="mt-3"><strong>Global Scale</strong>: Users across different regions need low latency</li><li class="mt-3"><strong>Cross-Region Sync</strong>: Ensuring consistency across geographic regions"</li></ol><p class="leading-8 mt-7"><strong>Aadvik:</strong>
+ "One more thing — this needs to work globally. Users in New York, 
+London, and Tokyo should all have a responsive experience. Network 
+latency between regions can be 200–300ms. How do you keep it snappy?"</p><p class="leading-8 mt-7"><strong>Sara:</strong>
+ "That's a critical requirement. We'll need per-region routing so users 
+connect to their nearest region, with intelligent cross-region 
+replication. The CRDT approach makes this much simpler since operations 
+are commutative."</p><p class="leading-8 mt-7"><strong>Aadvik:</strong> "Let's start by understanding why this is hard. In a single-user editor, it's simple:"</p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-javascript hljs" data-highlighted="yes"><span class="hljs-comment">// Simple case: one user</span>
+<span class="hljs-variable language_">document</span> = <span class="hljs-string">"Hello"</span>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">insert</span>(<span class="hljs-number">5</span>, <span class="hljs-string">" World"</span>)  <span class="hljs-comment">// "Hello World"</span>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">delete</span>(<span class="hljs-number">0</span>, <span class="hljs-number">5</span>)         <span class="hljs-comment">// " World"</span>
+<span class="hljs-comment">// Final: " World"</span></code></pre><p class="leading-8 mt-7">"But with multiple users editing simultaneously:"</p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-less hljs" data-highlighted="yes"><span class="hljs-comment">// User A: Inserts "Hello" at position 0</span>
+<span class="hljs-comment">// User B: Inserts "World" at position 5 (they see "Hello")</span>
+<span class="hljs-comment">// User C: Deletes position 2-4 (they see "Hello")</span>
+
+<span class="hljs-comment">// All operations happen concurrently</span>
+<span class="hljs-comment">// Different clients see operations in different orders</span>
+<span class="hljs-comment">// How do we ensure everyone gets "Hlo World" or "Hel World"?</span></code></pre><p class="leading-8 mt-7"><strong>Sara:</strong> "The fundamental challenge is <strong>causality preservation</strong> and <strong>convergence</strong>. We need:</p><ol class="pl-8 mt-2 list-decimal"><li class="mt-3"><strong>Causality</strong>: If operation A happened before B, all clients must apply A before B</li><li class="mt-3"><strong>Convergence</strong>: All clients eventually see the same document state</li><li class="mt-3"><strong>Intention Preservation</strong>: The result should match what users intended</li></ol><p class="leading-8 mt-7">There are two main approaches: <strong>Operational Transform (OT)</strong> and <strong>Conflict-free Replicated Data Types (CRDTs)</strong>."</p><h4 id="ab82" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">4. Scale Estimation</h4><p class="leading-8 mt-3"><strong>Aadvik:</strong> "Before we dive into architecture, let's estimate the scale. This helps us understand the infrastructure requirements."</p><p class="leading-8 mt-7"><strong>Sara:</strong> "Let me break down the numbers:</p><p class="leading-8 mt-7"><strong>a. Traffic Estimation:</strong></p><p class="leading-8 mt-7">For 1 million concurrent users (across all documents):</p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Average typing rate: 5 characters per second per user</li><li class="mt-3">Peak typing rate: 10 characters per second (fast typers)</li><li class="mt-3">Total edit operations: 1M users × 5 ops/sec = <strong>5 million operations/second</strong></li><li class="mt-3">Peak load: 1M × 10 = <strong>10 million operations/second</strong></li></ul><p class="leading-8 mt-7"><strong>b. Document Operations:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">100,000 documents being edited concurrently</li><li class="mt-3">Average 10 users per document = 1M users</li><li class="mt-3">Each edit operation generates:</li><li class="mt-3">1 WebSocket message to server</li><li class="mt-3">Server broadcasts to ~10 other users in same document</li><li class="mt-3">Total messages: 5M ops/sec × 10 = <strong>50 million messages/second</strong></li></ul><p class="leading-8 mt-7"><strong>c. Storage Requirements:</strong></p><p class="leading-8 mt-7"><strong>Document State:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Average document: 50,000 characters</li><li class="mt-3">With metadata (formatting, structure): ~100KB per document</li><li class="mt-3">100,000 active documents: 100K × 100KB = <strong>10 GB</strong> (in-memory)</li></ul><p class="leading-8 mt-7"><strong>Operation Log (for conflict resolution):</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Each operation: ~200 bytes (position, content, user_id, timestamp, vector clock)</li><li class="mt-3">5M ops/sec × 200 bytes = <strong>1 GB/second</strong> write rate</li><li class="mt-3">Keep last 1 hour of operations: 1 GB/sec × 3600 = <strong>3.6 TB</strong> per hour</li><li class="mt-3">With compression: ~<strong>1 TB per hour</strong></li></ul><p class="leading-8 mt-7"><strong>Presence Data:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Per user presence: ~100 bytes (user_id, cursor position, selection)</li><li class="mt-3">1M concurrent users: 1M × 100 bytes = <strong>100 MB</strong> (in-memory)</li></ul><p class="leading-8 mt-7"><strong>d. Bandwidth:</strong></p><p class="leading-8 mt-7"><strong>Inbound (Client → Server):</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">5M ops/sec × 200 bytes = <strong>1 Gbps</strong></li></ul><p class="leading-8 mt-7"><strong>Outbound (Server → Clients):</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">50M messages/sec × 200 bytes = <strong>10 Gbps</strong></li></ul><p class="leading-8 mt-7"><strong>e. Database Requirements:</strong></p><p class="leading-8 mt-7"><strong>Document Metadata:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Document ID, title, owner, permissions, last modified</li><li class="mt-3">~500 bytes per document</li><li class="mt-3">100,000 active documents: <strong>50 MB</strong></li></ul><p class="leading-8 mt-7"><strong>Operation History (for undo/redo):</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Store operations for last 24 hours</li><li class="mt-3">5M ops/sec × 24 hours × 200 bytes = <strong>86.4 TB per day</strong></li><li class="mt-3">With compression and archiving: ~<strong>20 TB per day</strong></li></ul><blockquote style="box-shadow: inset 3px 0 0 0 rgb(209 207 239 / var(--tw-bg-opacity));" class="px-5 pt-3 pb-3 mt-5"><p class="font-italic"><strong>Summary:</strong></p></blockquote><blockquote style="box-shadow: inset 3px 0 0 0 rgb(209 207 239 / var(--tw-bg-opacity));" class="px-5 pt-3 pb-3 mt-5"><p class="font-italic">Edit operations: 5M/sec (peak: 10M/sec)</p></blockquote><blockquote style="box-shadow: inset 3px 0 0 0 rgb(209 207 239 / var(--tw-bg-opacity));" class="px-5 pt-3 pb-3 mt-5"><p class="font-italic">Messages: 50M/sec</p></blockquote><blockquote style="box-shadow: inset 3px 0 0 0 rgb(209 207 239 / var(--tw-bg-opacity));" class="px-5 pt-3 pb-3 mt-5"><p class="font-italic">Bandwidth: 11 Gbps total</p></blockquote><blockquote style="box-shadow: inset 3px 0 0 0 rgb(209 207 239 / var(--tw-bg-opacity));" class="px-5 pt-3 pb-3 mt-5"><p class="font-italic">Storage: ~1 TB/hour for operation log</p></blockquote><blockquote style="box-shadow: inset 3px 0 0 0 rgb(209 207 239 / var(--tw-bg-opacity));" class="px-5 pt-3 pb-3 mt-5"><p class="font-italic">Memory: ~10 GB for active document state"</p></blockquote><p class="leading-8 mt-7"><strong>Aadvik:</strong> "Solid calculations. This gives us a clear picture of the infrastructure needs. Now let's design the architecture."</p><h3 id="2243" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">Part 2: High-Level Architecture</h3><p class="leading-8 mt-3"><strong>Aadvik:</strong> "Let's design the system. Start with a simple architecture and scale from there."</p><p class="leading-8 mt-7"><strong>Sara:</strong> "Let me start with the core components:"</p><h4 id="000d" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">1. Initial Architecture (Simple)</h4><div class="mt-7"><img loading="eager" alt="None" class="pt-5 m-auto lightense-target" role="presentation" referrerpolicy="no-referrer" src="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/1_Tem4lY8q2E06DmDshIAU9A.png"></div><p class="leading-8 mt-7"><strong>Aadvik:</strong>
+ "But this has a single WebSocket server — what happens when it crashes?
+ And how do you handle conflicts when operations arrive concurrently? 
+Also, you mentioned global scale — how do you handle users across 
+different regions?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "We need a distributed architecture with conflict-free replication and multi-region support. Here's the improved design:"</p><h4 id="8785" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">2. Distributed Architecture with CRDTs (Multi-Region)</h4><div class="mt-7"><img loading="eager" alt="None" class="pt-5 m-auto lightense-target" role="presentation" referrerpolicy="no-referrer" src="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/1_ENzMS3PWQiMU06pXBs88Qg.png"></div><p class="leading-8 mt-7"><strong>Aadvik:</strong> "Now we have a distributed system. But how do operations flow? What happens when a user types?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "Here's the flow:"</p><h4 id="87d6" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">3. Operation Flow</h4><div class="mt-7"><img loading="eager" alt="None" class="pt-5 m-auto lightense-target" role="presentation" referrerpolicy="no-referrer" src="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/1_TNj_itv8l_ms9pUWqWA-aA.png"></div><h3 id="a2e3" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">Part 3: CRDTs vs Operational Transform</h3><p class="leading-8 mt-3"><strong>Aadvik:</strong> "You mentioned two approaches: CRDTs and OT. Explain both."</p><p class="leading-8 mt-7"><strong>Sara:</strong> "Both solve the same problem but with different strategies:"</p><h4 id="8128" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">Approach 1: Operational Transform (OT)</h4><p class="leading-8 mt-3"><strong>How it works:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Operations are transformed before applying to handle conflicts</li><li class="mt-3">Each operation is transformed based on operations that happened before it</li><li class="mt-3">Requires a central server to maintain operation history</li></ul><p class="leading-8 mt-7"><strong>Example:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-css hljs" data-highlighted="yes">// Initial: <span class="hljs-string">"Hello"</span>
+// User A: Insert <span class="hljs-string">"X"</span> at position <span class="hljs-number">2</span> → <span class="hljs-string">"HeXllo"</span>
+// User B: Insert <span class="hljs-string">"Y"</span> at position <span class="hljs-number">4</span> → <span class="hljs-string">"HellYo"</span>
+// Operations arrive out of order on User B<span class="hljs-string">'s client:
+// B sees: [Insert Y@4] then [Insert X@2]
+// Need to transform: T(Insert X@2, Insert Y@4)
+// Result: Insert X@2, but Y is now at position 5
+// Final: "HeXllYo"</span></code></pre><p class="leading-8 mt-7"><strong>Pros:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Smaller message size (operations, not full state)</li><li class="mt-3">Familiar to developers</li><li class="mt-3">Used by Google Docs (early versions)</li></ul><p class="leading-8 mt-7"><strong>Cons:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Complex transformation rules</li><li class="mt-3">Requires central server (less distributed)</li><li class="mt-3">Hard to implement correctly</li><li class="mt-3">Difficult to handle all edge cases</li></ul><h4 id="ae41" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">Approach 2: Conflict-free Replicated Data Types (CRDTs)</h4><p class="leading-8 mt-3"><strong>How it works:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Data structure designed to be commutative and associative</li><li class="mt-3">Operations always merge correctly regardless of order</li><li class="mt-3">True distributed (no central server needed)</li></ul><p class="leading-8 mt-7"><strong>Example with Character-based CRDT:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-css hljs" data-highlighted="yes">// Each character has unique ID (site ID + logical clock)
+// Characters are stored in <span class="hljs-selector-tag">a</span> sequence that preserves <span class="hljs-attribute">order</span>
+
+// Initial: []
+// User A (site <span class="hljs-number">1</span>): Insert <span class="hljs-string">"H"</span> → [{id: <span class="hljs-number">1</span>:<span class="hljs-number">1</span>, char: <span class="hljs-string">'H'</span>, pos: <span class="hljs-number">0</span>}]
+// User <span class="hljs-selector-tag">B</span> (site <span class="hljs-number">2</span>): Insert <span class="hljs-string">"W"</span> → [{id: <span class="hljs-number">2</span>:<span class="hljs-number">1</span>, char: <span class="hljs-string">'W'</span>, pos: <span class="hljs-number">0</span>}]
+// Merge (both operations):
+// Sort by (site, clock) → [{id: <span class="hljs-number">1</span>:<span class="hljs-number">1</span>, char: <span class="hljs-string">'H'</span>}, {id: <span class="hljs-number">2</span>:<span class="hljs-number">1</span>, char: <span class="hljs-string">'W'</span>}]
+// <span class="hljs-attribute">Display</span>: <span class="hljs-string">"HW"</span>
+// If User A then inserts <span class="hljs-string">"e"</span> after <span class="hljs-string">"H"</span>:
+// [{id: <span class="hljs-number">1</span>:<span class="hljs-number">1</span>, char: <span class="hljs-string">'H'</span>}, {id: <span class="hljs-number">1</span>:<span class="hljs-number">2</span>, char: <span class="hljs-string">'e'</span>, after: <span class="hljs-number">1</span>:<span class="hljs-number">1</span>}, {id: <span class="hljs-number">2</span>:<span class="hljs-number">1</span>, char: <span class="hljs-string">'W'</span>}]
+// <span class="hljs-attribute">Display</span>: <span class="hljs-string">"HeW"</span></code></pre><p class="leading-8 mt-7"><strong>Pros:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Simple merge (just union of sets)</li><li class="mt-3">Truly distributed (no central server)</li><li class="mt-3">Mathematically proven to converge</li><li class="mt-3">Easier to implement correctly</li></ul><p class="leading-8 mt-7"><strong>Cons:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Larger message size (unique IDs for each character)</li><li class="mt-3">Requires garbage collection for deleted characters</li><li class="mt-3">Memory overhead for tombstone markers</li></ul><p class="leading-8 mt-7"><strong>Aadvik:</strong> "Which approach would you choose?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "For a modern system, I'd recommend <strong>CRDTs</strong> because:</p><ol class="pl-8 mt-2 list-decimal"><li class="mt-3">Simpler to implement correctly</li><li class="mt-3">Truly distributed (better scalability)</li><li class="mt-3">Mathematically sound (proven convergence)</li><li class="mt-3">Works offline (no central server needed)</li></ol><p class="leading-8 mt-7">Google Docs now uses a hybrid approach, but many modern editors (like Notion, Figma) use CRDTs."</p><h3 id="0fcd" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">Part 4: CRDT Implementation Deep Dive</h3><p class="leading-8 mt-3"><strong>Aadvik:</strong> "Let's dive into CRDT implementation. How does it actually work?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "For text editing, we use a <strong>Logoot-like CRDT</strong> (or <strong>RGA — Replicated Growable Array</strong>). Here's how:"</p><h4 id="9e9a" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">1. Character-Based CRDT</h4><p class="leading-8 mt-3"><strong>Core Idea:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Each character has a unique identifier (site ID + logical timestamp)</li><li class="mt-3">Characters form a sequence that preserves causality</li><li class="mt-3">Deletions are marked with tombstones (not immediately removed)</li></ul><p class="leading-8 mt-7"><strong>Data Structure:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-typescript hljs" data-highlighted="yes"><span class="hljs-comment">// Character with unique identifier</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Char</span> {
+    <span class="hljs-title class_">String</span> id;        <span class="hljs-comment">// "site_id:logical_timestamp"</span>
+    char value;       <span class="hljs-comment">// The actual character</span>
+    <span class="hljs-title class_">String</span> prevId;    <span class="hljs-comment">// Previous character ID (for ordering)</span>
+    <span class="hljs-built_in">boolean</span> deleted;  <span class="hljs-comment">// Tombstone marker</span>
+}
+
+<span class="hljs-comment">// Document as ordered list of characters</span>
+<span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">Char</span>&gt; <span class="hljs-variable language_">document</span> = [
+    {<span class="hljs-attr">id</span>: <span class="hljs-string">"1:1"</span>, <span class="hljs-attr">value</span>: <span class="hljs-string">'H'</span>, <span class="hljs-attr">prevId</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">deleted</span>: <span class="hljs-literal">false</span>},
+    {<span class="hljs-attr">id</span>: <span class="hljs-string">"1:2"</span>, <span class="hljs-attr">value</span>: <span class="hljs-string">'e'</span>, <span class="hljs-attr">prevId</span>: <span class="hljs-string">"1:1"</span>, <span class="hljs-attr">deleted</span>: <span class="hljs-literal">false</span>},
+    {<span class="hljs-attr">id</span>: <span class="hljs-string">"2:1"</span>, <span class="hljs-attr">value</span>: <span class="hljs-string">'W'</span>, <span class="hljs-attr">prevId</span>: <span class="hljs-string">"1:1"</span>, <span class="hljs-attr">deleted</span>: <span class="hljs-literal">false</span>}
+];</code></pre><p class="leading-8 mt-7"><strong>Insert Operation:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-typescript hljs" data-highlighted="yes"><span class="hljs-comment">// User inserts 'X' after character with id "1:2"</span>
+<span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">insert</span>(<span class="hljs-params">char value, <span class="hljs-built_in">String</span> afterId, <span class="hljs-built_in">String</span> siteId</span>) {
+    <span class="hljs-title class_">String</span> newId = <span class="hljs-title function_">generateId</span>(siteId);  <span class="hljs-comment">// "1:3"</span>
+    
+    <span class="hljs-title class_">Char</span> newChar = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Char</span>(
+        <span class="hljs-attr">id</span>: newId,
+        <span class="hljs-attr">value</span>: value,
+        <span class="hljs-attr">prevId</span>: afterId,
+        <span class="hljs-attr">deleted</span>: <span class="hljs-literal">false</span>
+    );
+    
+    <span class="hljs-comment">// Add to local document</span>
+    <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">add</span>(newChar);
+    
+    <span class="hljs-comment">// Broadcast operation</span>
+    <span class="hljs-title function_">broadcast</span>({
+        <span class="hljs-attr">type</span>: <span class="hljs-string">"INSERT"</span>,
+        <span class="hljs-attr">char</span>: newChar,
+        <span class="hljs-attr">afterId</span>: afterId
+    });
+}</code></pre><p class="leading-8 mt-7"><strong>Merge Operation (Receive from other client):</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-typescript hljs" data-highlighted="yes"><span class="hljs-comment">// Receive insert operation from another client</span>
+<span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">mergeInsert</span>(<span class="hljs-params">Char newChar</span>) {
+    <span class="hljs-comment">// Find insertion point (character with prevId)</span>
+    int insertPos = <span class="hljs-title function_">findInsertionPoint</span>(newChar.<span class="hljs-property">prevId</span>);
+    
+    <span class="hljs-comment">// Insert in correct position (maintain order by ID)</span>
+    <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">add</span>(insertPos, newChar);
+    
+    <span class="hljs-comment">// Sort by ID to maintain causality</span>
+    <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">sort</span>((a, b) -&gt; <span class="hljs-title function_">compareIds</span>(a.<span class="hljs-property">id</span>, b.<span class="hljs-property">id</span>));
+    
+    <span class="hljs-comment">// Update UI</span>
+    <span class="hljs-title function_">updateDisplay</span>();
+}</code></pre><p class="leading-8 mt-7"><strong>Delete Operation:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-typescript hljs" data-highlighted="yes"><span class="hljs-comment">// User deletes character with id "1:2"</span>
+<span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">delete</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> charId</span>) {
+    <span class="hljs-comment">// Mark as deleted (tombstone)</span>
+    <span class="hljs-title class_">Char</span> charToDelete = <span class="hljs-title function_">findById</span>(charId);
+    charToDelete.<span class="hljs-property">deleted</span> = <span class="hljs-literal">true</span>;
+    
+    <span class="hljs-comment">// Broadcast delete operation</span>
+    <span class="hljs-title function_">broadcast</span>({
+        <span class="hljs-attr">type</span>: <span class="hljs-string">"DELETE"</span>,
+        <span class="hljs-attr">charId</span>: charId
+    });
+    
+    <span class="hljs-comment">// Update UI (hide deleted character)</span>
+    <span class="hljs-title function_">updateDisplay</span>();
+}</code></pre><h4 id="adbe" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">2. Version Vectors for Causality</h4><p class="leading-8 mt-3"><strong>Aadvik:</strong> "How do you ensure causality? What if operations depend on each other?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "We use <strong>version vectors</strong> (also called <strong>vector clocks</strong>) to track which operations each site has seen:"</p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-typescript hljs" data-highlighted="yes"><span class="hljs-comment">// Version vector: map of site_id -&gt; logical_timestamp</span>
+<span class="hljs-title class_">Map</span>&lt;<span class="hljs-title class_">String</span>, <span class="hljs-title class_">Long</span>&gt; versionVector = {
+    <span class="hljs-string">"site_1"</span>: <span class="hljs-number">5</span>,  <span class="hljs-comment">// Site 1 has seen 5 operations from site_1</span>
+    <span class="hljs-string">"site_2"</span>: <span class="hljs-number">3</span>,  <span class="hljs-comment">// Site 1 has seen 3 operations from site_2</span>
+    <span class="hljs-string">"site_3"</span>: <span class="hljs-number">7</span>   <span class="hljs-comment">// Site 1 has seen 7 operations from site_3</span>
+};
+
+<span class="hljs-comment">// When sending operation:</span>
+<span class="hljs-keyword">public</span> <span class="hljs-title class_">Operation</span> <span class="hljs-title function_">createOperation</span>(<span class="hljs-params">char value, <span class="hljs-built_in">String</span> afterId</span>) {
+    <span class="hljs-title class_">String</span> siteId = <span class="hljs-title function_">getSiteId</span>();
+    <span class="hljs-title class_">Long</span> timestamp = <span class="hljs-title function_">incrementLocalClock</span>(siteId);
+    
+    <span class="hljs-keyword">return</span> {
+        <span class="hljs-attr">type</span>: <span class="hljs-string">"INSERT"</span>,
+        <span class="hljs-attr">char</span>: {<span class="hljs-attr">id</span>: siteId + <span class="hljs-string">":"</span> + timestamp, <span class="hljs-attr">value</span>: value, <span class="hljs-attr">prevId</span>: afterId},
+        <span class="hljs-attr">versionVector</span>: <span class="hljs-title function_">getCurrentVersionVector</span>()  <span class="hljs-comment">// Include current state</span>
+    };
+}
+<span class="hljs-comment">// When receiving operation:</span>
+<span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">receiveOperation</span>(<span class="hljs-params">Operation op</span>) {
+    <span class="hljs-comment">// Check if we've already seen dependencies</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">hasSeenAllDependencies</span>(op.<span class="hljs-property">versionVector</span>)) {
+        <span class="hljs-comment">// Safe to apply</span>
+        <span class="hljs-title function_">mergeOperation</span>(op);
+        <span class="hljs-title function_">updateVersionVector</span>(op.<span class="hljs-property">versionVector</span>);
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-comment">// Wait for dependencies (queue operation)</span>
+        <span class="hljs-title function_">queueOperation</span>(op);
+    }
+}</code></pre><h3 id="220a" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">Part 5: Real-Time Synchronization Flow</h3><p class="leading-8 mt-3"><strong>Aadvik:</strong> "Show me the complete flow when multiple users are editing."</p><p class="leading-8 mt-7"><strong>Sara:</strong> "Here's the end-to-end flow with CRDT:"</p><h4 id="d527" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">1. Complete Synchronization Flow</h4><div class="mt-7"><img loading="eager" alt="None" class="pt-5 m-auto lightense-target" role="presentation" referrerpolicy="no-referrer" src="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/1_Vqmdbwx51qavkr3zFTQnYA.png"></div><p class="leading-8 mt-7"><strong>Key Points:</strong></p><ol class="pl-8 mt-2 list-decimal"><li class="mt-3"><strong>Optimistic Updates</strong>: Users see their changes immediately (no waiting for server)</li><li class="mt-3"><strong>CRDT Merge</strong>: Operations merge automatically regardless of order</li><li class="mt-3"><strong>Version Vectors</strong>: Ensure causality (operations applied in correct order)</li><li class="mt-3"><strong>Eventual Consistency</strong>: All clients converge to same state</li></ol><h4 id="5c62" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">2. Per-Region Routing &amp; Cross-Region Replication</h4><p class="leading-8 mt-3"><strong>Aadvik:</strong>
+ "You mentioned multi-region support. How does per-region routing work? 
+What happens when users in different regions edit the same document?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "Per-region routing is critical for low latency. Here's how it works:"</p><h4 id="d381" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">3. Per-Region Routing Strategy</h4><p class="leading-8 mt-3"><strong>1. User Connection:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">User connects to nearest region based on geolocation (DNS-based routing)</li><li class="mt-3">Global Load Balancer routes WebSocket connection to regional WebSocket servers</li><li class="mt-3">User's operations go to their local region first (optimistic application)</li></ul><p class="leading-8 mt-7"><strong>2. Document Ownership:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Each document has a 'home region' (region where it was created)</li><li class="mt-3">Home region maintains authoritative state</li><li class="mt-3">Other regions maintain replicas with eventual consistency</li></ul><p class="leading-8 mt-7"><strong>3. Operation Flow:</strong></p><p class="leading-8 mt-7"><strong>Same Region (Fast Path):</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-css hljs" data-highlighted="yes">User <span class="hljs-selector-tag">A</span> (US) → US WebSocket Server → US Document Service → US Database
+User <span class="hljs-selector-tag">B</span> (US) → US WebSocket Server → US Document Service → US Database
+- Operations applied immediately
+- Broadcast <span class="hljs-selector-tag">to</span> other users in same region via Kafka
+- Latency: &lt; <span class="hljs-number">50ms</span></code></pre><p class="leading-8 mt-7"><strong>Cross-Region (Slower Path):</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-java hljs" data-highlighted="yes">User <span class="hljs-title function_">A</span> <span class="hljs-params">(US)</span> → US WebSocket Server → US Document Service → US Database
+User <span class="hljs-title function_">B</span> <span class="hljs-params">(EU)</span> → EU WebSocket Server → EU Document Service → EU Database
+- Operations applied locally <span class="hljs-title function_">first</span> <span class="hljs-params">(optimistic)</span>
+- Replicated to other regions asynchronously via Replication Service
+- Conflict resolution when operations <span class="hljs-title function_">arrive</span> <span class="hljs-params">(CRDT handles <span class="hljs-built_in">this</span> automatically)</span>
+- Latency: &lt; 100ms (same region), &lt; 500ms (cross-region)</code></pre><h4 id="d032" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">4. Cross-Region Replication Flow</h4><div class="mt-7"><img loading="eager" alt="None" class="pt-5 m-auto lightense-target" role="presentation" referrerpolicy="no-referrer" src="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/1_MSgF65X0EfuD8uS4aYpr0w.png"></div><p class="leading-8 mt-7"><strong>4. Replication Strategy:</strong></p><p class="leading-8 mt-7"><strong>Eventual Consistency Model:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Operations applied locally immediately (optimistic)</li><li class="mt-3">Operations replicated to other regions via Kafka/event stream</li><li class="mt-3">Each region applies operations in order (using vector clocks)</li><li class="mt-3">Conflicts resolved using CRDT merge algorithm (automatic)</li></ul><p class="leading-8 mt-7"><strong>5. Conflict Resolution Example:</strong></p><p class="leading-8 mt-7"><strong>Scenario:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-sql hljs" data-highlighted="yes">Document: "Hello World"
+<span class="hljs-keyword">User</span> A (US): Inserts "Hi " <span class="hljs-keyword">at</span> position <span class="hljs-number">0</span>
+<span class="hljs-keyword">User</span> B (EU): Inserts "Beautiful " <span class="hljs-keyword">at</span> position <span class="hljs-number">6</span>
+<span class="hljs-keyword">Both</span> operations happen simultaneously</code></pre><p class="leading-8 mt-7"><strong>Step-by-Step Resolution:</strong></p><p class="leading-8 mt-7"><strong>1. Local Application (Optimistic):</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-yaml hljs" data-highlighted="yes"><span class="hljs-attr">Region US:</span>
+<span class="hljs-bullet">-</span> <span class="hljs-string">Receives</span> <span class="hljs-string">A's</span> <span class="hljs-attr">operation:</span> <span class="hljs-string">Insert</span> <span class="hljs-string">"Hi "</span> <span class="hljs-string">at</span> <span class="hljs-number">0</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">Applies immediately:</span> <span class="hljs-string">"Hi Hello World"</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">Vector clock:</span> {<span class="hljs-attr">US:</span> <span class="hljs-number">1</span>, <span class="hljs-attr">EU:</span> <span class="hljs-number">0</span>}
+
+<span class="hljs-attr">Region EU:</span>
+<span class="hljs-bullet">-</span> <span class="hljs-string">Receives</span> <span class="hljs-string">B's</span> <span class="hljs-attr">operation:</span> <span class="hljs-string">Insert</span> <span class="hljs-string">"Beautiful "</span> <span class="hljs-string">at</span> <span class="hljs-number">6</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">Applies immediately:</span> <span class="hljs-string">"Hello Beautiful World"</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">Vector clock:</span> {<span class="hljs-attr">US:</span> <span class="hljs-number">0</span>, <span class="hljs-attr">EU:</span> <span class="hljs-number">1</span>}</code></pre><p class="leading-8 mt-7"><strong>2. Replication:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-yaml hljs" data-highlighted="yes"><span class="hljs-string">US</span> <span class="hljs-string">→</span> <span class="hljs-attr">EU:</span> <span class="hljs-string">Operation</span> <span class="hljs-string">A</span> <span class="hljs-string">with</span> <span class="hljs-string">vector</span> <span class="hljs-string">clock</span> {<span class="hljs-attr">US:</span> <span class="hljs-number">1</span>, <span class="hljs-attr">EU:</span> <span class="hljs-number">0</span>}
+<span class="hljs-string">EU</span> <span class="hljs-string">→</span> <span class="hljs-attr">US:</span> <span class="hljs-string">Operation</span> <span class="hljs-string">B</span> <span class="hljs-string">with</span> <span class="hljs-string">vector</span> <span class="hljs-string">clock</span> {<span class="hljs-attr">US:</span> <span class="hljs-number">0</span>, <span class="hljs-attr">EU:</span> <span class="hljs-number">1</span>}</code></pre><p class="leading-8 mt-7"><strong>3. Conflict Resolution (CRDT Merge):</strong></p><p class="leading-8 mt-7"><strong>In Region EU:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Has: "Hello Beautiful World" with clock {US: 0, EU: 1}</li><li class="mt-3">Receives: Insert "Hi " at 0 with clock {US: 1, EU: 0}</li><li class="mt-3">Since clocks are concurrent (neither dominates), merge:</li><li class="mt-3">Operation A: Insert at position 0</li><li class="mt-3">Operation B: Insert at position 6, but A inserted 3 chars, so adjust: position 6 + 3 = 9</li><li class="mt-3">Result: "Hi Hello Beautiful World" ✓</li></ul><p class="leading-8 mt-7"><strong>In Region US:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Has: "Hi Hello World" with clock {US: 1, EU: 0}</li><li class="mt-3">Receives: Insert "Beautiful " at 6 with clock {US: 0, EU: 1}</li><li class="mt-3">Merge:</li><li class="mt-3">Operation B: Insert at position 6</li><li class="mt-3">Operation A already inserted 3 chars at 0, so B's position is correct</li><li class="mt-3">Result: "Hi Hello Beautiful World" ✓</li></ul><p class="leading-8 mt-7"><strong>4. Convergence:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Both regions end up with: "Hi Hello Beautiful World"</li><li class="mt-3">Vector clocks converge: {US: 1, EU: 1}</li><li class="mt-3">State is consistent across all regions</li></ul><p class="leading-8 mt-7"><strong>Key Points:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Operations are commutative, so order doesn't matter</li><li class="mt-3">Position adjustments happen automatically (CRDT handles this)</li><li class="mt-3">No manual conflict resolution needed</li><li class="mt-3">All regions converge to same state</li></ul><p class="leading-8 mt-7"><strong>6. State Synchronization:</strong></p><p class="leading-8 mt-7"><strong>Periodic Sync:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Every 1 second, regions exchange operation summaries</li><li class="mt-3">Compare vector clocks to find missing operations</li><li class="mt-3">Request missing operations from other regions</li><li class="mt-3">Apply missing operations to catch up</li></ul><p class="leading-8 mt-7"><strong>On Document Open:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Client requests latest state from nearest region</li><li class="mt-3">Region checks if it has latest state (via vector clock)</li><li class="mt-3">If not, fetches missing operations from home region</li><li class="mt-3">Applies all operations to reconstruct state</li></ul><h3 id="803f" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">Part 6: Database Design</h3><p class="leading-8 mt-3"><strong>Aadvik:</strong> "How do you store documents in the database? What's the schema?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "We need to store both the CRDT state and the rendered document:"</p><p class="leading-8 mt-7"><strong>1. Documents Table</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> documents (
+    document_id <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">PRIMARY</span> KEY,
+    title <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    owner_id <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    created_at <span class="hljs-type">TIMESTAMP</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    updated_at <span class="hljs-type">TIMESTAMP</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    version_vector JSONB <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    <span class="hljs-comment">-- Version vector: {"site_1": 100, "site_2": 50, ...}</span>
+    
+    INDEX idx_owner_id (owner_id),
+    INDEX idx_updated_at (updated_at)
+);</code></pre><p class="leading-8 mt-7"><strong>Purpose:</strong> Stores document metadata and current version vector state.</p><p class="leading-8 mt-7"><strong>2. Document Operations Table (CRDT State)</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> document_operations (
+    operation_id BIGSERIAL <span class="hljs-keyword">PRIMARY</span> KEY,
+    document_id <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    site_id <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    logical_timestamp <span class="hljs-type">BIGINT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    operation_type <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,  <span class="hljs-comment">-- INSERT, DELETE, FORMAT</span>
+    character_id <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,   <span class="hljs-comment">-- "site_id:timestamp"</span>
+    character_value <span class="hljs-type">CHAR</span>(<span class="hljs-number">1</span>),
+    previous_id <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">100</span>),            <span class="hljs-comment">-- Previous character ID</span>
+    deleted <span class="hljs-type">BOOLEAN</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-literal">false</span>,        <span class="hljs-comment">-- Tombstone for DELETE</span>
+    format_data JSONB,                   <span class="hljs-comment">-- For formatting (bold, italic)</span>
+    created_at <span class="hljs-type">TIMESTAMP</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    
+    <span class="hljs-keyword">FOREIGN</span> KEY (document_id) <span class="hljs-keyword">REFERENCES</span> documents(document_id),
+    <span class="hljs-keyword">UNIQUE</span> KEY unique_char_id (document_id, character_id),
+    INDEX idx_doc_site (document_id, site_id, logical_timestamp)
+);</code></pre><p class="leading-8 mt-7"><strong>Purpose:</strong> Stores all CRDT operations (characters) that form the document. This is the source of truth.</p><p class="leading-8 mt-7"><strong>3. Document Snapshots Table</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> document_snapshots (
+    snapshot_id <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">PRIMARY</span> KEY,
+    document_id <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    content TEXT <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,                <span class="hljs-comment">-- Rendered text (for fast reads)</span>
+    version_vector JSONB <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    operation_count <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,         <span class="hljs-comment">-- Number of operations included</span>
+    created_at <span class="hljs-type">TIMESTAMP</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    
+    <span class="hljs-keyword">FOREIGN</span> KEY (document_id) <span class="hljs-keyword">REFERENCES</span> documents(document_id),
+    INDEX idx_doc_created (document_id, created_at <span class="hljs-keyword">DESC</span>)
+);</code></pre><p class="leading-8 mt-7"><strong>Purpose:</strong> Periodic snapshots of rendered document for fast loading (avoid rebuilding from all operations).</p><p class="leading-8 mt-7"><strong>4. Document Collaborators Table</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-sql hljs" data-highlighted="yes"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> document_collaborators (
+    document_id <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    user_id <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">50</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    permission <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,      <span class="hljs-comment">-- OWNER, EDITOR, VIEWER</span>
+    joined_at <span class="hljs-type">TIMESTAMP</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>,
+    
+    <span class="hljs-keyword">PRIMARY</span> KEY (document_id, user_id),
+    INDEX idx_user_id (user_id)
+);</code></pre><p class="leading-8 mt-7"><strong>Purpose:</strong> Tracks who has access to each document and their permissions.</p><p class="leading-8 mt-7"><strong>5. Document Sessions Table (Redis)</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-css hljs" data-highlighted="yes">-- Stored in Redis, not SQL
+-- Key: session:doc:{document_id}:user:{user_id}
+-- Value: {
+--   cursor_position: <span class="hljs-number">10</span>,
+--   selection_range: {start: <span class="hljs-number">5</span>, end: <span class="hljs-number">10</span>},
+--   version_vector: {...},
+--   last_seen: timestamp
+-- }
+-- TTL: <span class="hljs-number">30</span> minutes (session expires if inactive)</code></pre><p class="leading-8 mt-7"><strong>Purpose:</strong> Tracks active editing sessions for presence awareness (who's editing where).</p><h3 id="fbf1" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">Part 7: API Design &amp; Contracts</h3><p class="leading-8 mt-3"><strong>Aadvik:</strong> "Let's define all the APIs needed for the collaborative editor."</p><p class="leading-8 mt-7"><strong>Sara:</strong> "Here are the key endpoints:"</p><h4 id="706d" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">1. Document Management APIs</h4><h4 id="2e51" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">a. Create Document</h4><p class="leading-8 mt-3"><strong>Endpoint:</strong> <code class="p-1.5 bg-gray-300 dark:bg-gray-600">POST /api/v1/documents</code></p><p class="leading-8 mt-7"><strong>Request:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"title"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"My Document"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"content"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Initial text"</span>
+<span class="hljs-punctuation">}</span></code></pre><p class="leading-8 mt-7"><strong>Response (201 Created):</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"document_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"doc_123456"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"title"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"My Document"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"owner_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"user_123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"created_at"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2024-01-15T10:30:00Z"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"share_url"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"https://docs.example.com/d/doc_123456"</span>
+<span class="hljs-punctuation">}</span></code></pre><h4 id="6208" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">b. Get Document</h4><p class="leading-8 mt-3"><strong>Endpoint:</strong> <code class="p-1.5 bg-gray-300 dark:bg-gray-600">GET /api/v1/documents/{document_id}</code></p><p class="leading-8 mt-7"><strong>Response (200 OK):</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"document_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"doc_123456"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"title"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"My Document"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"content"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Hello World"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"version_vector"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"site_1"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">100</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"site_2"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">50</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"collaborators"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"user_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"user_123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Alice"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"permission"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"OWNER"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"online"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"cursor_position"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">10</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"created_at"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2024-01-15T10:30:00Z"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"updated_at"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2024-01-15T11:00:00Z"</span>
+<span class="hljs-punctuation">}</span></code></pre><h4 id="6bb8" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">c. Update Document Title</h4><p class="leading-8 mt-3"><strong>Endpoint:</strong> <code class="p-1.5 bg-gray-300 dark:bg-gray-600">PUT /api/v1/documents/{document_id}/title</code></p><p class="leading-8 mt-7"><strong>Request:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"title"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Updated Title"</span>
+<span class="hljs-punctuation">}</span></code></pre><p class="leading-8 mt-7"><strong>Response (200 OK):</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"document_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"doc_123456"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"title"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Updated Title"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"updated_at"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2024-01-15T11:05:00Z"</span>
+<span class="hljs-punctuation">}</span></code></pre><h4 id="1bf3" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">d. Delete Document</h4><p class="leading-8 mt-3"><strong>Endpoint:</strong> <code class="p-1.5 bg-gray-300 dark:bg-gray-600">DELETE /api/v1/documents/{document_id}</code></p><p class="leading-8 mt-7"><strong>Response (204 No Content)</strong></p><h4 id="c92b" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">2. Real-Time Editing APIs (WebSocket)</h4><p class="leading-8 mt-3"><strong>WebSocket Connection</strong></p><p class="leading-8 mt-7"><strong>Endpoint:</strong> <code class="p-1.5 bg-gray-300 dark:bg-gray-600">wss://api.example.com/ws/documents/{document_id}</code></p><p class="leading-8 mt-7"><strong>Connection Headers:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><code class="p-1.5 bg-gray-300 dark:bg-gray-600">Authorization: Bearer &lt;token&gt;</code></li><li class="mt-3"><code class="p-1.5 bg-gray-300 dark:bg-gray-600">User-Id: &lt;user_id&gt;</code></li></ul><p class="leading-8 mt-7"><strong>Client → Server Messages:</strong></p><p class="leading-8 mt-7"><strong>1. Join Document:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"JOIN"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"document_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"doc_123456"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"version_vector"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"site_1"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">100</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"site_2"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">50</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span></code></pre><p class="leading-8 mt-7"><strong>2. Send Operation:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"OPERATION"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"operation"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"op_type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"INSERT"</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"character"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"site_3:1"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"H"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"previous_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"site_1:100"</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"version_vector"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"site_1"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">100</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"site_2"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">50</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"site_3"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span></code></pre><p class="leading-8 mt-7"><strong>3. Update Cursor:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"CURSOR_UPDATE"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"cursor_position"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">15</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"selection_range"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"start"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">10</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"end"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">15</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span></code></pre><p class="leading-8 mt-7"><strong>Server → Client Messages:</strong></p><p class="leading-8 mt-7"><strong>1. Operation Received:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"OPERATION_ACK"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"operation_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"op_789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"status"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"APPLIED"</span>
+<span class="hljs-punctuation">}</span></code></pre><p class="leading-8 mt-7"><strong>2. Operation from Other Client:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"OPERATION_BROADCAST"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"operation"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"op_type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"INSERT"</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"character"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"site_2:51"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"W"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"previous_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"site_1:100"</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"version_vector"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"site_1"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">100</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"site_2"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">51</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"user_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"user_456"</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span></code></pre><p class="leading-8 mt-7"><strong>3. Presence Update:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"PRESENCE_UPDATE"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"user_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"user_456"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"cursor_position"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">20</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Bob"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"online"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span>
+<span class="hljs-punctuation">}</span></code></pre><p class="leading-8 mt-7"><strong>4. Error:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"ERROR"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"code"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"VERSION_CONFLICT"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"message"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Version vector mismatch, please reconnect"</span>
+<span class="hljs-punctuation">}</span></code></pre><h4 id="f8b8" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">3. Document Sharing APIs</h4><p class="leading-8 mt-3"><strong>Share Document</strong></p><p class="leading-8 mt-7"><strong>Endpoint:</strong> <code class="p-1.5 bg-gray-300 dark:bg-gray-600">POST /api/v1/documents/{document_id}/share</code></p><p class="leading-8 mt-7"><strong>Request:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"user_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"user_789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"permission"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"EDITOR"</span>  <span class="hljs-comment">// or "VIEWER"</span>
+<span class="hljs-punctuation">}</span></code></pre><p class="leading-8 mt-7"><strong>Response (200 OK):</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"share_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"share_123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"document_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"doc_123456"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"user_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"user_789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"permission"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"EDITOR"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"shared_at"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2024-01-15T11:10:00Z"</span>
+<span class="hljs-punctuation">}</span></code></pre><h4 id="5ac9" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">4. Get Document Collaborators</h4><p class="leading-8 mt-3"><strong>Endpoint:</strong> <code class="p-1.5 bg-gray-300 dark:bg-gray-600">GET /api/v1/documents/{document_id}/collaborators</code></p><p class="leading-8 mt-7"><strong>Response (200 OK):</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"collaborators"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"user_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"user_123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Alice"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"permission"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"OWNER"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"online"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"cursor_position"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">10</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"user_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"user_456"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Bob"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"permission"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"EDITOR"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"online"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"cursor_position"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">25</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span></code></pre><h4 id="a785" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">4. Version History APIs</h4><p class="leading-8 mt-3"><strong>Get Document History</strong></p><p class="leading-8 mt-7"><strong>Endpoint:</strong> <code class="p-1.5 bg-gray-300 dark:bg-gray-600">GET /api/v1/documents/{document_id}/history?limit=50</code></p><p class="leading-8 mt-7"><strong>Response (200 OK):</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"versions"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"version_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"v_100"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"content"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"Hello World"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"version_vector"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">"site_1"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">100</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">"site_2"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">50</span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"created_by"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"user_123"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"created_at"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2024-01-15T11:00:00Z"</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"total_versions"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">150</span>
+<span class="hljs-punctuation">}</span></code></pre><p class="leading-8 mt-7"><strong>Restore Document Version</strong></p><p class="leading-8 mt-7"><strong>Endpoint:</strong> <code class="p-1.5 bg-gray-300 dark:bg-gray-600">POST /api/v1/documents/{document_id}/restore</code></p><p class="leading-8 mt-7"><strong>Request:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"version_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"v_100"</span>
+<span class="hljs-punctuation">}</span></code></pre><p class="leading-8 mt-7"><strong>Response (200 OK):</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"document_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"doc_123456"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"restored_version"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"v_100"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"restored_at"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2024-01-15T11:15:00Z"</span>
+<span class="hljs-punctuation">}</span></code></pre><h3 id="f6b1" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">Part 8: Kafka Event Contracts</h3><p class="leading-8 mt-3"><strong>Aadvik:</strong> "What events are published to Kafka for synchronization?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "Key events for document operations:"</p><h4 id="928a" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8"><strong>1. Document Operations Topic</strong></h4><p class="leading-8 mt-3"><strong>Topic</strong>: <code class="p-1.5 bg-gray-300 dark:bg-gray-600">document-operations-{document_id}</code></p><p class="leading-8 mt-7"><strong>Event: DocumentOperationEvent</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"event_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"evt_123"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"event_type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"DocumentOperationEvent"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"document_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"doc_123456"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"site_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"site_3"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"operation"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"op_type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"INSERT"</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"character"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"site_3:1"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"value"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"H"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"previous_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"site_1:100"</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"version_vector"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"site_1"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">100</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"site_2"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">50</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"site_3"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"user_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"user_789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"timestamp"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2024-01-15T11:00:00Z"</span>
+<span class="hljs-punctuation">}</span></code></pre><p class="leading-8 mt-7"><strong>Event: DocumentOperationDeleteEvent</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-bash hljs" data-highlighted="yes">{
+  <span class="hljs-string">"event_id"</span>: <span class="hljs-string">"evt_124"</span>,
+  <span class="hljs-string">"event_type"</span>: <span class="hljs-string">"DocumentOperationDeleteEvent"</span>,
+  <span class="hljs-string">"document_id"</span>: <span class="hljs-string">"doc_123456"</span>,
+  <span class="hljs-string">"operation"</span>: {
+    <span class="hljs-string">"op_type"</span>: <span class="hljs-string">"DELETE"</span>,
+    <span class="hljs-string">"character_id"</span>: <span class="hljs-string">"site_1:50"</span>,
+    <span class="hljs-string">"version_vector"</span>: {...}
+  },
+  <span class="hljs-string">"user_id"</span>: <span class="hljs-string">"user_789"</span>,
+  <span class="hljs-string">"timestamp"</span>: <span class="hljs-string">"2024-01-15T11:00:01Z"</span>
+}</code></pre><h4 id="c4eb" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8"><strong>2. Presence Events Topic</strong></h4><p class="leading-8 mt-3"><strong>Topic</strong>: <code class="p-1.5 bg-gray-300 dark:bg-gray-600">document-presence-{document_id}</code></p><p class="leading-8 mt-7"><strong>Event: PresenceUpdateEvent</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"event_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"evt_125"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"event_type"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"PresenceUpdateEvent"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"document_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"doc_123456"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"user_id"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"user_789"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"cursor_position"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">15</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"selection_range"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"start"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">10</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"end"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">15</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"online"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"timestamp"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"2024-01-15T11:00:02Z"</span>
+<span class="hljs-punctuation">}</span></code></pre><h3 id="ad07" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">Part 9: Scaling Architecture</h3><p class="leading-8 mt-3"><strong>Aadvik:</strong> "How do you scale to handle 5000 concurrent editors per document?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "Scaling strategies:"</p><div class="mt-7"><img loading="eager" alt="None" class="pt-5 m-auto lightense-target" role="presentation" referrerpolicy="no-referrer" src="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/1_T27jfi7vyKumL1FGxhZ1KA.png"></div><h4 id="8525" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8"><strong>Scaling Strategies:</strong></h4><p class="leading-8 mt-3"><strong>1. WebSocket Server Scaling:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Load balancer distributes connections across WebSocket servers</li><li class="mt-3">Each document can be handled by multiple servers (Kafka for broadcasting)</li><li class="mt-3">Sticky sessions not required (stateless via Kafka)</li></ul><p class="leading-8 mt-7"><strong>2. Kafka Partitioning:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-cpp hljs" data-highlighted="yes"><span class="hljs-comment">// Partition by document_id for ordered processing per document</span>
+kafkaTemplate.<span class="hljs-built_in">send</span>(<span class="hljs-string">"document-operations-"</span> + documentId, 
+                   documentId,  <span class="hljs-comment">// Partition key</span>
+                   operationEvent);
+<span class="hljs-comment">// Same document = same partition = ordered operations</span></code></pre><p class="leading-8 mt-7"><strong>3. Database Sharding:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Shard documents by <code class="p-1.5 bg-gray-300 dark:bg-gray-600">document_id</code> (consistent hashing)</li><li class="mt-3">Each shard handles subset of documents</li><li class="mt-3">Operations for same document go to same shard</li></ul><p class="leading-8 mt-7"><strong>4. Redis for Presence:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Store active sessions in Redis (TTL: 30 minutes)</li><li class="mt-3">Key: <code class="p-1.5 bg-gray-300 dark:bg-gray-600">presence:doc:{document_id}:user:{user_id}</code></li><li class="mt-3">Expires automatically when user disconnects</li></ul><p class="leading-8 mt-7"><strong>5. Operation Batching:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Batch multiple operations before sending to Kafka</li><li class="mt-3">Reduces message overhead</li><li class="mt-3">Still maintains causality (batch has version vector)</li></ul><p class="leading-8 mt-7"><strong>6. Multi-Region Scaling:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Each region operates independently</li><li class="mt-3">Horizontal scaling within each region</li><li class="mt-3">Cross-region replication via dedicated Replication Service</li><li class="mt-3">Geographic load distribution (users connect to nearest region)</li></ul><p class="leading-8 mt-7"><strong>7. Caching Strategy:</strong></p><p class="leading-8 mt-7"><strong>Multi-Layer Caching:</strong></p><p class="leading-8 mt-7"><strong>L1: In-Memory (Service Instance)</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Cache document state for active connections</li><li class="mt-3">LRU eviction, 100MB per instance</li><li class="mt-3">Reduces Redis load</li></ul><p class="leading-8 mt-7"><strong>L2: Redis (Distributed)</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Cache document state and presence</li><li class="mt-3">Shared across all instances in region</li><li class="mt-3">TTL: 1 hour for state, 60 seconds for presence</li></ul><p class="leading-8 mt-7"><strong>L3: Database (Persistent)</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Source of truth for operations</li><li class="mt-3">Used for recovery and history</li></ul><p class="leading-8 mt-7"><strong>8. Document Sharding:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Shard documents by <code class="p-1.5 bg-gray-300 dark:bg-gray-600">document_id</code> (consistent hashing)</li><li class="mt-3">Each shard handles subset of documents</li><li class="mt-3">Operations for same document go to same shard</li><li class="mt-3">Enables efficient broadcasting (users of same document on same shard)</li></ul><p class="leading-8 mt-7"><strong>9. Load Balancing:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Sticky sessions for WebSocket (same document → same server when possible)</li><li class="mt-3">Ensures users of same document on same server (enables efficient broadcasting)</li><li class="mt-3">Health checks for WebSocket connections</li><li class="mt-3">Geographic routing (Route53, CloudFlare) for global load balancing</li></ul><h3 id="e7fb" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">Part 10: Failure Handling &amp; Recovery</h3><p class="leading-8 mt-3"><strong>Aadvik:</strong> "What happens if a client disconnects? How do you recover?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "We handle disconnections and recovery:"</p><h4 id="045f" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">Reconnection Flow</h4><div class="mt-7"><img loading="eager" alt="None" class="pt-5 m-auto lightense-target" role="presentation" referrerpolicy="no-referrer" src="Building%20a%20Collaborative%20Document%20Editor_%20Real-Time%20Synchronization,%20CRDTs,%20and%20Conflict%20Resolution%20_%20by%20Arvind%20Kumar%20-%20Freedium_files/1_WDe3rghp4Ca9S7yINREarg.png"></div><h4 id="0d79" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">Implementation Strategy</h4><p class="leading-8 mt-3"><strong>1. Operation Logging:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-typescript hljs" data-highlighted="yes"><span class="hljs-comment">// Store all operations with version vectors</span>
+<span class="hljs-comment">// When client reconnects:</span>
+<span class="hljs-keyword">public</span> <span class="hljs-title class_">List</span>&lt;<span class="hljs-title class_">Operation</span>&gt; <span class="hljs-title function_">getMissingOperations</span>(<span class="hljs-params">
+    <span class="hljs-built_in">String</span> documentId, 
+    <span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, Long&gt; clientVersionVector
+</span>) {
+    <span class="hljs-comment">// Find operations client hasn't seen</span>
+    <span class="hljs-keyword">return</span> db.<span class="hljs-title function_">query</span>(
+        <span class="hljs-string">"SELECT * FROM document_operations "</span> +
+        <span class="hljs-string">"WHERE document_id = ? "</span> +
+        <span class="hljs-string">"AND (site_id, logical_timestamp) &gt; (client's version vector)"</span>,
+        documentId
+    );
+}</code></pre><p class="leading-8 mt-7"><strong>2. Snapshot for Fast Recovery:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-java hljs" data-highlighted="yes"><span class="hljs-comment">// Periodic snapshots (every 1000 operations)</span>
+<span class="hljs-comment">// Fast recovery: load snapshot + apply operations after snapshot</span>
+<span class="hljs-keyword">public</span> Document <span class="hljs-title function_">recoverDocument</span><span class="hljs-params">(String documentId)</span> {
+    <span class="hljs-type">Snapshot</span> <span class="hljs-variable">snapshot</span> <span class="hljs-operator">=</span> getLatestSnapshot(documentId);
+    <span class="hljs-type">Document</span> <span class="hljs-variable">doc</span> <span class="hljs-operator">=</span> renderFromSnapshot(snapshot);
+    
+    <span class="hljs-comment">// Apply operations after snapshot</span>
+    List&lt;Operation&gt; ops = getOperationsAfter(snapshot.operationCount);
+    <span class="hljs-keyword">for</span> (Operation op : ops) {
+        doc.applyOperation(op);
+    }
+    
+    <span class="hljs-keyword">return</span> doc;
+}</code></pre><h4 id="7029" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">Additional Failure Scenarios</h4><ol class="pl-8 mt-2 list-decimal"><li class="mt-3"><strong>WebSocket Server Crash:</strong></li></ol><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Problem:</strong> Service instance dies, WebSocket connections lost</li><li class="mt-3"><strong>Mitigation:
+- </strong>Health checks detect failure
+- Load balancer stops routing to failed instance
+- Clients reconnect automatically (exponential backoff)
+- New instance launched via auto-scaling
+- Clients fetch latest state on reconnect</li><li class="mt-3"><strong>Recovery:</strong> Clients reconnect, state synced from Redis/database</li></ul><p class="leading-8 mt-7"><strong>2. Redis Failure:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Problem:</strong> Document state cache unavailable</li><li class="mt-3"><strong>Mitigation:
+- </strong>Redis Cluster with replicas (automatic failover)
+- Fallback to database for document state
+- Reconstruct state from operation log if needed
+- Cache warming when Redis recovers</li><li class="mt-3"><strong>Impact:</strong> Slightly higher latency, but system continues working</li></ul><p class="leading-8 mt-7"><strong>3. Database Failure:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Problem:</strong> Primary database unavailable</li><li class="mt-3"><strong>Mitigation:
+- </strong>Read replicas for querying
+- Failover to replica (with potential data loss window)
+- Reconstruct from operation log if needed</li><li class="mt-3"><strong>Recovery:</strong> Promote replica to primary, rebuild from operation log</li></ul><p class="leading-8 mt-7"><strong>4. Network Issues: Cross-Region Network Partition:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Problem:</strong> Regions can't communicate, operations can't replicate</li><li class="mt-3"><strong>Mitigation:
+- </strong>Each region continues operating independently
+- Operations applied locally (optimistic)
+- Operations queued for replication when connection restored
+- CRDT ensures no conflicts when operations merge</li><li class="mt-3"><strong>Recovery:</strong> When partition heals, regions exchange operations, state converges</li></ul><p class="leading-8 mt-7"><strong>5. Data Loss Scenarios: Operation Loss</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Problem:</strong> Operation not persisted before service crash</li><li class="mt-3"><strong>Mitigation:
+- </strong>Write operation to Kafka first (durable)
+- Then update Redis cache
+- Kafka ensures at-least-once delivery
+- Operations are idempotent (can be applied multiple times)</li><li class="mt-3"><strong>Recovery:</strong> Replay operations from Kafka if needed</li></ul><p class="leading-8 mt-7"><strong>6. State Corruption:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Problem:</strong> Document state becomes inconsistent</li><li class="mt-3"><strong>Mitigation:
+- </strong>Reconstruct state from operation log
+- Apply all operations from beginning (or from checkpoint)
+- Vector clocks ensure correct ordering
+- Validate state hash after reconstruction</li></ul><p class="leading-8 mt-7"><strong>7. Kafka Lag:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Problem:</strong> Replication falls behind, cross-region sync delayed</li><li class="mt-3"><strong>Mitigation:
+- </strong>Monitor Kafka consumer lag
+- Scale consumers if lag increases
+- Increase partition count if needed
+- Alert if lag exceeds threshold (e.g., 1 second)</li></ul><p class="leading-8 mt-7"><strong>8. Consistency Issues: Vector Clock Desynchronization:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Problem:</strong> Vector clocks get out of sync between regions</li><li class="mt-3"><strong>Mitigation:
+- </strong>Periodic sync: regions exchange vector clocks
+- Compare clocks to find missing operations
+- Request missing operations from other regions
+- Apply missing operations to catch up</li></ul><p class="leading-8 mt-7"><strong>9. Operation Ordering:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Problem:</strong> Operations arrive out of order</li><li class="mt-3"><strong>Mitigation:
+- </strong>CRDT operations are commutative (order doesn't matter)
+- Vector clocks ensure causal ordering
+- Operations can be applied in any order, result is same</li></ul><p class="leading-8 mt-7"><strong>10. Client-Side Failures: Client Crash:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Problem:</strong> Client application crashes, unsaved edits lost</li><li class="mt-3"><strong>Mitigation:
+- </strong>Operations sent to server immediately (optimistic)
+- Server persists operations even if client crashes
+- On restart, client syncs state from server
+- All edits are preserved</li></ul><h3 id="2677" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">Part 11: Trade-offs &amp; Final Thoughts</h3><p class="leading-8 mt-3"><strong>Aadvik:</strong> "What are the key trade-offs in this design?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "Important trade-offs:</p><p class="leading-8 mt-7"><strong>1. CRDT vs OT</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Chosen</strong>: CRDT for simplicity and distributed nature</li><li class="mt-3"><strong>Trade-off</strong>: Larger message size (unique IDs per character)</li><li class="mt-3"><strong>Mitigation</strong>: Compression, operation batching</li></ul><p class="leading-8 mt-7"><strong>2. Optimistic Updates</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Chosen</strong>: Apply operations locally immediately</li><li class="mt-3"><strong>Trade-off</strong>: Possible rollback if operation conflicts</li><li class="mt-3"><strong>Mitigation</strong>: Rare in practice, UI handles rollback gracefully</li></ul><p class="leading-8 mt-7"><strong>3. Eventual Consistency</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Chosen</strong>: Eventually consistent (AP from CAP)</li><li class="mt-3"><strong>Trade-off</strong>: Temporary inconsistency during network partitions</li><li class="mt-3"><strong>Mitigation</strong>: CRDT guarantees convergence</li></ul><p class="leading-8 mt-7"><strong>4. Memory Overhead</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Chosen</strong>: Store all operations (for history and recovery)</li><li class="mt-3"><strong>Trade-off</strong>: Database grows over time</li><li class="mt-3"><strong>Mitigation</strong>: Periodic snapshots, archive old operations</li></ul><p class="leading-8 mt-7"><strong>5. WebSocket Scaling</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Chosen</strong>: Multiple WebSocket servers with Kafka broadcasting</li><li class="mt-3"><strong>Trade-off</strong>: More complex architecture</li><li class="mt-3"><strong>Mitigation</strong>: Well-established pattern, Kafka handles distribution</li></ul><p class="leading-8 mt-7"><strong>6. Per-Region Routing vs Single Region</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Chosen</strong>: Per-region routing for global scale</li><li class="mt-3"><strong>Trade-off</strong>: More complex replication, cross-region sync overhead</li><li class="mt-3"><strong>Mitigation</strong>: CRDT makes cross-region sync simpler (no conflicts)</li><li class="mt-3"><strong>Benefit</strong>: Low latency for users (connect to nearest region)</li></ul><p class="leading-8 mt-7"><strong>7. Consistency: Strong vs Eventual</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Chosen</strong>: Eventual consistency (AP from CAP)</li><li class="mt-3"><strong>Trade-off</strong>: Users may briefly see different states</li><li class="mt-3"><strong>Mitigation</strong>: CRDT guarantees convergence, brief inconsistencies acceptable</li><li class="mt-3"><strong>Benefit</strong>: Low latency, works offline, handles partitions</li></ul><p class="leading-8 mt-7"><strong>8. Operation-Based vs State-Based</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Chosen</strong>: Operation-based (store operations, not just state)</li><li class="mt-3"><strong>Trade-off</strong>: More complex (need to store operations, reconstruct state)</li><li class="mt-3"><strong>Mitigation</strong>: Snapshots for fast recovery</li><li class="mt-3"><strong>Benefit</strong>: Enables undo/redo, conflict resolution, operation replay</li></ul><p class="leading-8 mt-7"><strong>9. In-Memory State vs Database-Only</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Chosen</strong>: Hybrid (In-Memory + Database)</li><li class="mt-3"><strong>Trade-off</strong>: More complex (two storage systems, need to keep in sync)</li><li class="mt-3"><strong>Mitigation</strong>: Redis for fast access, database for persistence</li><li class="mt-3"><strong>Benefit</strong>: Fast access for active documents, persistent storage for operations"</li></ul><p class="leading-8 mt-7"><strong>Aadvik:</strong> "What would you improve if you had more time?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "Additional improvements:</p><ol class="pl-8 mt-2 list-decimal"><li class="mt-3"><strong>Operation Compression</strong>: Compress operation batches before sending</li><li class="mt-3"><strong>Adaptive Snapshotting</strong>: Create snapshots based on document size and activity</li><li class="mt-3"><strong>Offline Mode</strong>: Queue operations locally, sync when online</li><li class="mt-3"><strong>Conflict Visualization</strong>: Show conflict resolution to users</li><li class="mt-3"><strong>Granular Permissions</strong>: Per-section permissions (some users can only edit certain parts)</li><li class="mt-3"><strong>Rich Formatting CRDT</strong>: Extend CRDT to handle formatting (bold, italic, colors)</li><li class="mt-3"><strong>Performance Optimization</strong>: Incremental rendering (only update changed parts of UI)"</li></ol><h3 id="ea3d" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">Part 13: Monitoring &amp; Observability</h3><p class="leading-8 mt-3"><strong>Aadvik:</strong> "How do you monitor and maintain this system in production?"</p><p class="leading-8 mt-7"><strong>Sara:</strong> "Monitoring and observability are critical for a real-time collaborative system. Here's the strategy:"</p><h4 id="512a" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">1. Monitoring &amp; Observability</h4><p class="leading-8 mt-3"><strong>Metrics (Prometheus + Grafana):</strong></p><p class="leading-8 mt-7"><strong>Application Metrics:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">WebSocket connection count per region</li><li class="mt-3">Operations per second per document</li><li class="mt-3">Latency: p50, p95, p99 for operations</li><li class="mt-3">Error rate (failed operations, connection drops)</li><li class="mt-3">Presence update rate</li></ul><p class="leading-8 mt-7"><strong>Business Metrics:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Active documents being edited</li><li class="mt-3">Average users per document</li><li class="mt-3">Average operations per document</li><li class="mt-3">Document save success rate</li></ul><p class="leading-8 mt-7"><strong>Infrastructure Metrics:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">CPU, memory, disk usage</li><li class="mt-3">Redis memory usage and hit rate</li><li class="mt-3">Kafka consumer lag (replication delay)</li><li class="mt-3">Database connection pool usage</li><li class="mt-3">Network bandwidth</li></ul><p class="leading-8 mt-7"><strong>Alerting Rules:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>High Error Rate:</strong> Alert if error rate exceeds 1% for 5 minutes</li><li class="mt-3"><strong>High Latency:</strong> Alert if p95 latency exceeds 500ms for 5 minutes</li><li class="mt-3"><strong>Connection Drops:</strong> Alert if connection drop rate exceeds 5% for 5 minutes</li><li class="mt-3"><strong>Kafka Lag:</strong> Alert if replication lag exceeds 1 second</li><li class="mt-3"><strong>Redis Memory:</strong> Alert if Redis memory usage exceeds 80%</li><li class="mt-3"><strong>State Divergence:</strong> Alert if vector clocks diverge significantly between regions</li></ul><h4 id="fbbd" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">2. Distributed Tracing</h4><p class="leading-8 mt-3"><strong>OpenTelemetry / Jaeger:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Trace operations from client to server to other clients</li><li class="mt-3">See latency breakdown per component</li><li class="mt-3">Identify slow regions or services</li><li class="mt-3">Debug cross-region replication issues</li></ul><p class="leading-8 mt-7"><strong>Example Trace:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-scss hljs" data-highlighted="yes">Operation <span class="hljs-attribute">Flow</span> (<span class="hljs-number">150ms</span> total)
+├── Client → API Gateway (<span class="hljs-number">10ms</span>)
+├── API Gateway → WebSocket Server (<span class="hljs-number">20ms</span>)
+│   ├── Apply Operation (<span class="hljs-number">30ms</span>)
+│   ├── Update Redis (<span class="hljs-number">10ms</span>)
+│   ├── Publish to Kafka (<span class="hljs-number">20ms</span>)
+│   └── Broadcast to Clients (<span class="hljs-number">40ms</span>)
+└── Cross-Region Replication (async, <span class="hljs-number">200ms</span>)</code></pre><h4 id="baac" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">3. Logging</h4><p class="leading-8 mt-3"><strong>Structured Logging (JSON):</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-css hljs" data-highlighted="yes">{
+  "timestamp": <span class="hljs-string">"2024-01-15T10:30:00Z"</span>,
+  <span class="hljs-string">"level"</span>: <span class="hljs-string">"INFO"</span>,
+  <span class="hljs-string">"service"</span>: <span class="hljs-string">"websocket-service"</span>,
+  <span class="hljs-string">"region"</span>: <span class="hljs-string">"us-east"</span>,
+  <span class="hljs-string">"document_id"</span>: <span class="hljs-string">"uuid"</span>,
+  <span class="hljs-string">"operation_id"</span>: <span class="hljs-string">"uuid"</span>,
+  <span class="hljs-string">"user_id"</span>: <span class="hljs-string">"uuid"</span>,
+  <span class="hljs-string">"operation_type"</span>: <span class="hljs-string">"insert"</span>,
+  <span class="hljs-string">"latency_ms"</span>: <span class="hljs-number">45</span>,
+  <span class="hljs-string">"vector_clock"</span>: {"site-<span class="hljs-selector-tag">A</span>": <span class="hljs-number">5</span>, <span class="hljs-string">"site-B"</span>: <span class="hljs-number">3</span>}
+}</code></pre><p class="leading-8 mt-7"><strong>Log Aggregation (ELK Stack):</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Centralized logging across all regions</li><li class="mt-3">Search operations by document, user, time</li><li class="mt-3">Correlate logs with traces</li><li class="mt-3">Retention: 30 days hot, 1 year cold</li></ul><h4 id="c87f" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">4. Health Checks</h4><p class="leading-8 mt-3"><strong>Service Health Endpoints:</strong></p><pre class="flex flex-col justify-center border mt-7 dark:border-gray-700"><button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button><code class="p-2 bg-gray-100 dark:bg-gray-900 overflow-x-auto language-bash hljs" data-highlighted="yes">GET /health
+{
+  <span class="hljs-string">"status"</span>: <span class="hljs-string">"healthy"</span>,
+  <span class="hljs-string">"checks"</span>: {
+    <span class="hljs-string">"redis"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-string">"kafka"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-string">"database"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-string">"websocket_connections"</span>: 50000
+  }
+}</code></pre><p class="leading-8 mt-7"><strong>WebSocket Health:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Monitor connection count</li><li class="mt-3">Monitor connection drop rate</li><li class="mt-3">Monitor message processing rate</li></ul><h4 id="a49c" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">5. SLOs &amp; SLIs</h4><p class="leading-8 mt-3"><strong>Service Level Indicators (SLIs):</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Operation latency: p95 &lt; 100ms (same region), p95 &lt; 500ms (cross-region)</li><li class="mt-3">Availability: 99.9% uptime</li><li class="mt-3">Operation success rate: 99.9%</li><li class="mt-3">State convergence: All regions converge within 1 second</li></ul><p class="leading-8 mt-7"><strong>Service Level Objectives (SLOs):</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">99.9% of operations processed successfully</li><li class="mt-3">99% of operations visible to other users within 100ms (same region)</li><li class="mt-3">99.9% WebSocket connection uptime</li></ul><p class="leading-8 mt-7"><strong>Error Budget:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">0.1% error budget per month</li><li class="mt-3">If exceeded: stop feature work, focus on reliability</li></ul><h4 id="8c07" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-l md:text-xl pt-8">6. Performance Monitoring</h4><p class="leading-8 mt-3"><strong>Real User Monitoring (RUM):</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Track actual user experience</li><li class="mt-3">Measure operation latency from user's perspective</li><li class="mt-3">Geographic performance breakdown</li><li class="mt-3">Identify slow regions</li></ul><p class="leading-8 mt-7"><strong>Operation Analysis:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">Track operation types (insert, delete, format)</li><li class="mt-3">Identify patterns (bulk operations, rapid typing)</li><li class="mt-3">Optimize based on common patterns</li></ul><h3 id="4db5" class="font-bold font-sans break-normal text-gray-900 dark:text-gray-100 text-1xl md:text-2xl pt-12">Summary</h3><p class="leading-8 mt-3"><strong>Key Takeaways:</strong></p><ol class="pl-8 mt-2 list-decimal"><li class="mt-3"><strong>CRDTs provide automatic conflict resolution</strong> — Operations merge correctly regardless of order, no manual conflict resolution needed</li><li class="mt-3"><strong>Version vectors ensure causality</strong> — Operations applied in correct order, even across regions</li><li class="mt-3"><strong>Optimistic updates improve UX</strong> — Users see changes immediately, no waiting for server</li><li class="mt-3"><strong>Event-driven architecture scales</strong> — Kafka handles broadcasting to thousands of clients</li><li class="mt-3"><strong>Per-region routing enables global scale</strong> — Users connect to nearest region for low latency</li><li class="mt-3"><strong>Cross-region replication with eventual consistency</strong> — All regions converge to same state automatically</li><li class="mt-3"><strong>Snapshots enable fast recovery</strong> — Rebuild document state quickly after disconnection</li><li class="mt-3"><strong>Multi-layer caching optimizes performance</strong> — In-memory, Redis, and database for different use cases</li></ol><p class="leading-8 mt-7"><strong>System handles:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3">1000–5000 concurrent editors per document</li><li class="mt-3">1 million concurrent users across platform</li><li class="mt-3">Real-time synchronization (&lt;100ms latency same region, &lt;500ms cross-region)</li><li class="mt-3">Automatic conflict resolution (CRDT-based)</li><li class="mt-3">Offline editing with sync</li><li class="mt-3">Horizontal scaling across multiple regions</li><li class="mt-3">Global deployment (US, EU, APAC)</li></ul><p class="leading-8 mt-7"><strong>Architecture Highlights:</strong></p><ul class="pl-8 mt-2 list-disc"><li class="mt-3"><strong>Multi-region deployment</strong> with per-region routing</li><li class="mt-3"><strong>CRDT-based conflict resolution</strong> (simpler than OT, works offline)</li><li class="mt-3"><strong>Event-driven replication</strong> via Kafka</li><li class="mt-3"><strong>Hybrid storage</strong> (Redis for speed, Database for persistence)</li><li class="mt-3"><strong>Comprehensive monitoring</strong> with SLOs and distributed tracing</li><li class="mt-3"><strong>Cost-optimized</strong> (~$35K/month with optimizations)</li></ul><p class="leading-8 mt-7">=========</p><blockquote style="box-shadow: inset 3px 0 0 0 rgb(209 207 239 / var(--tw-bg-opacity));" class="px-5 pt-3 pb-3 mt-5"><p class="font-italic">Liked this deep dive story? If Yes Please <strong>👏 Clap</strong> | <strong>📤 Share</strong> | <strong>🔔 Follow</strong></p></blockquote><p class="leading-8 mt-7"><em><strong>This story is part of 10-Day system design crash course — </strong></em><em><strong><a style="text-decoration: underline;" rel="" title="" href="https://medium.com/@codefarm0/the-ultimate-10-day-system-design-interview-prep-a-laser-focused-roadmap-4c8101df2242" target="_blank">link</a></strong></em></p><p class="leading-8 mt-7">&gt;&gt; <em>Below is the list to get all the stories at one place</em></p><p class="leading-8 mt-7"><a style="text-decoration: underline;" rel="nofollow" title="" href="https://medium.com/@codefarm0/list/10days-system-design-crash-course-3b7d6b29e413?source=my_lists---------1-------3b7d6b29e413----------------------------" target="_blank">https://
+medium.com/@codefarm0/list/10days-system-design-crash-
+course-3b7d6b29e413?
+source=my_lists---------1-------3b7d6b29e413----------------------------</a></p>
+        </div>
+        <div class="flex flex-wrap gap-2 mt-5">
+            <a title="System Design Interview" target="_blank" href="https://medium.com/tag/system-design-interview"><span class="px-2 py-1 text-xs text-green-500 bg-green-100 rounded-full dark:bg-green-800 dark:text-gray-100">#system-design-interview</span></a><a title="System Design Concepts" target="_blank" href="https://medium.com/tag/system-design-concepts"><span class="px-2 py-1 text-xs text-green-500 bg-green-100 rounded-full dark:bg-green-800 dark:text-gray-100">#system-design-concepts</span></a><a title="Distributed Systems" target="_blank" href="https://medium.com/tag/distributed-systems"><span class="px-2 py-1 text-xs text-green-500 bg-green-100 rounded-full dark:bg-green-800 dark:text-gray-100">#distributed-systems</span></a><a title="Microservice Architecture" target="_blank" href="https://medium.com/tag/microservice-architecture"><span class="px-2 py-1 text-xs text-green-500 bg-green-100 rounded-full dark:bg-green-800 dark:text-gray-100">#microservice-architecture</span></a><a title="Software Engineering" target="_blank" href="https://medium.com/tag/software-engineering"><span class="px-2 py-1 text-xs text-green-500 bg-green-100 rounded-full dark:bg-green-800 dark:text-gray-100">#software-engineering</span></a>
+        </div>
+        <div class="mt-8 font-sans">
+            <p class="pb-3 text-base font-bold text-green-500 md:text-sm">
+                <a href="https://codefarm0.medium.com/building-a-collaborative-document-editor-real-time-synchronization-crdts-and-conflict-resolution-4743436639f5#bypass" class="text-sm font-bold text-green-500 no-underline md:text-sm hover:underline ">&lt; Go to the original</a>
+            </p>
+        </div>
+        <div class="container w-full pt-12 mx-auto md:max-w-3xl"></div>
+    </div>
+    <style>
+.main-content {
+ letter-spacing: -0.06px;
+ font-family: source-serif-pro, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+pre {
+    font-size: 75%;
+    background-color: #e3e2e2;
+}
+p code, ul code, li code {
+    font-size: 75%;
+}
+    </style>
+    <script>
+document.addEventListener('DOMContentLoaded', (event) => {
+  hljs.highlightAll();
+
+  document.querySelectorAll('pre code').forEach((el) => {
+        code = el.textContent;
+        el = el.parentElement;
+        el.innerHTML = '<button class="p-1 bg-gray-300 hljs-copy dark:bg-zinc-800">Copy</button>' + el.innerHTML; // append copy button
+        el.getElementsByClassName('hljs-copy')[0].contentCopy = code;
+         el.getElementsByClassName('hljs-copy')[0].addEventListener("click", function () {
+             this.innerText = 'Copying..';
+             if (!navigator.userAgent.toLowerCase().includes('safari')) {
+                 navigator.clipboard.writeText(this.contentCopy);
+             } else {
+                 prompt("Clipboard (Select: ⌘+a > Copy:⌘+c)", this.contentCopy);
+             }
+             this.innerText = 'Copied!';
+             button = this;
+             setTimeout(function () {
+                 button.innerText = 'Copy';
+             }, 1500)
+         });
+});
+  });
+    </script>
+    <style>
+     .hljs-copy {
+         float: right;
+         cursor: pointer;
+     }
+    </style>
+<div id="problemModal" class="fixed inset-0 flex items-center justify-center hidden w-full h-full overflow-y-auto bg-black bg-opacity-50 modal" style="z-index: 999999">
+    <div class="w-11/12 max-h-screen mx-auto rounded shadow-lg modal-container md:max-w-xl">
+        <div class="px-6 py-4 my-8 text-left text-black bg-white modal-content dark:bg-gray-800 dark:text-white">
+            <h1 class="text-3xl font-bold">Reporting a Problem</h1>
+            <div class="mt-3">
+                <p>
+                    Sometimes we have problems displaying some Medium posts.
+                    <br>
+                    <br>
+                </p>
+                <p>If you have a problem that some images aren't loading - try using VPN. Probably you have problem with
+                    access to Medium CDN (or fucking Cloudflare's bot detection algorithms are blocking you).</p>
+            </div>
+            <form action="#" method="POST" class="mt-4" id="problem-form">
+                <div class="mb-4">
+                    <label for="problem-description" class="block mb-2 font-bold text-gray-700 dark:text-white">Problem
+                        Description</label>
+                    <textarea id="problem-description" name="problem-description" placeholder="Describe your problem here..." class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" rows="4" required=""></textarea>
+                </div>
+                <div>
+                    <button type="submit" class="px-4 py-2 m-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline">Submit</button>
+                    <button type="button" class="px-4 py-2 m-2 font-bold text-white bg-gray-500 rounded modal-close hover:bg-gray-700 focus:outline-none focus:shadow-outline">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    tailwind.config = {
+        darkMode: 'class',
+    }
+
+    function changeTheme(themeName) {
+        // Source: https://stackoverflow.com/questions/59257368/how-to-dynamically-change-the-theme-using-highlight-js
+        console.log(`Applying theme: ${themeName}`);
+        const existingLink = document.querySelector('link[href*="highlight.js"]');
+        if (existingLink) {
+            existingLink.remove();
+        }
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${themeName}.min.css`;
+        document.head.appendChild(link);
+        document.querySelector("span").textContent = themeName;
+    }
+
+    function navigateToOrigin() {
+        window.location.href = window.location.origin;
+    }
+
+    function updateThemeIcons() {
+        const isDarkMode = localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.getElementById('darkIcon').classList.toggle('hidden', !isDarkMode);
+        document.getElementById('lightIcon').classList.toggle('hidden', isDarkMode);
+    }
+
+    updateThemeIcons();
+
+    document.getElementById('darkModeToggle').addEventListener('click', function () {
+        const isDarkMode = localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDarkMode) {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.style.cssText = "--lightense-backdrop: white;";
+            localStorage.setItem("theme", "light");
+            changeTheme("a11y-light");
+        } else {
+            document.documentElement.classList.add('dark');
+            document.documentElement.style.cssText = "--lightense-backdrop: black;";
+            localStorage.setItem("theme", "dark");
+            changeTheme("androidstudio");
+        }
+        updateThemeIcons();
+    })
+
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        //document.getElementById('darkIcon').classList.remove('hidden');
+        //document.getElementById('lightIcon').classList.add('hidden')
+        changeTheme("androidstudio");
+    } else {
+        document.documentElement.classList.remove('dark')
+        //document.getElementById('lightIcon').classList.remove('hidden');
+        //document.getElementById('darkIcon').classList.add('hidden');
+        changeTheme("a11y-light");
+    }
+</script>
+<script>
+    const openModalButton = document.getElementById('openProblemModal');
+    const closeModalButton = document.querySelector('.modal-close');
+    const modal = document.getElementById('problemModal');
+    const problemDescriptionInput = document.getElementById('problem-description');
+    const submitButton = document.querySelector('form button');
+    const body = document.querySelector('body');
+
+    openModalButton.addEventListener('click', () => {
+        body.classList.add('!overflow-hidden'); // Prevent scrolling on the body
+        modal.classList.remove('hidden');
+    });
+
+    closeModalButton.addEventListener('click', () => {
+        body.classList.remove('!overflow-hidden'); // Re-enable scrolling on the body
+        modal.classList.add('hidden');
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+            body.classList.remove('!overflow-hidden');
+        }
+    });
+
+    function navigateNoCache() {
+        window.location.href = `/render-no-cache${window.location.pathname}`;
+    }
+
+    const submitForm = async (event) => {
+        event.preventDefault();
+
+        console.log('Form submiting is started!');
+        submitButton.disabled = true;
+
+        // Get the problem description from the input field
+        const problemDescription = problemDescriptionInput.value;
+        const currentPage = window.location.href;
+
+        try {
+            // Send a POST request to the "report-problem" API endpoint
+            const response = await fetch('/report-problem', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ description: problemDescription, page: currentPage }),
+            });
+
+            if (response.ok) {
+                // Report submitted successfully, you can add a success message or further actions here
+                console.log('Problem report submitted successfully.');
+                modal.classList.add('hidden'); // Close the modal
+            } else {
+                // Handle errors, such as non-200 responses
+                console.error('Failed to submit problem report.');
+                submitButton.disabled = false;
+            }
+        } catch (error) {
+            // Handle network errors or other exceptions
+            console.error('An error occurred:', error);
+            submitButton.disabled = false;
+        }
+    };
+
+    document.getElementById('problem-form').onsubmit = submitForm;
+</script>
+<script>
+    const h = document.documentElement, b = document.body;
+    const st = 'scrollTop';
+    const sh = 'scrollHeight';
+    const progress = document.getElementById('progress');
+    const header = document.getElementById('header');
+    const navcontent = document.getElementById('nav-content');
+
+    document.addEventListener('scroll', function () {
+        /* Refresh scroll % width */
+        const scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+        progress.style.setProperty('--scroll', scroll + '%');
+
+        /* Apply classes for slide in bar */
+        const shouldAddClass = window.scrollY > 10;
+    });
+
+    document.getElementById('nav-toggle').onclick = function () {
+        document.getElementById("nav-content").classList.toggle("hidden");
+    }
+
+    window.addEventListener('load', function () {
+        Lightense('img:not(.no-lightense)');
+    }, false);
+</script>
+<!-- <script>
+    var lazyLoadInstance = new LazyLoad({
+        callback_loaded: function (element) {
+            console.log(element);
+            console.log(element.tagName);
+            switch (element.tagName) {
+                case "IMG":
+                    console.log(`${element} is image, wrapping into lightense`);
+                    Lightense(element);
+                    break;
+                case "IFRAME":
+                    const resizeIframe = () => {
+                        console.log(`${element} is iframe, wrapping script`);
+                        let iframeHeight = element.contentWindow.document.body.scrollHeight;
+                        if (iframeHeight == 150) {
+                            iframeHeight = 500;
+                        }
+                        element.style.height = iframeHeight + 'px';
+                    };
+                    window.addEventListener('resize', resizeIframe);
+                    setInterval(resizeIframe, 4500);
+                    resizeIframe();
+                    break;
+            }
+        },
+        callback_error: (element) => {
+            console.log(element);
+            if (element.tagName === "IMG" && element.hasAttribute("data-src")) {
+                const srcAttribute = element.attributes["data-src"].value;
+                if (srcAttribute.startsWith("https://miro.medium.com/v2/")) {
+                    element.setAttribute("src", srcAttribute.replace("https://miro.medium.com/v2/", "https://freedium-mirror.cfd/@miro/v2/"));
+                }
+            }
+        }
+    });
+</script> -->
+<script>
+    function navigateToOrigin() {
+        window.location.href = window.location.origin;
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Storage notification
+        const storageNotificationContainer = document.querySelector('.storage-notification-container');
+        const storageCloseButton = storageNotificationContainer ? storageNotificationContainer.querySelector('.storage-close-button') : null;
+        const storageFlagString = "showNotification-storage-25gb-2026";
+
+        function showStorageNotification() {
+            if (storageNotificationContainer && !localStorage.getItem(storageFlagString)) {
+                storageNotificationContainer.style.display = 'block';
+            }
+        }
+
+        function hideStorageNotification() {
+            if (!storageNotificationContainer) return;
+            localStorage.setItem(storageFlagString, 'false');
+            storageNotificationContainer.style.display = 'none';
+        }
+
+        if (storageCloseButton) {
+            storageCloseButton.addEventListener('click', hideStorageNotification);
+        }
+
+        // Show the storage notification by default
+        showStorageNotification();
+    });
+</script>
+
+
+</div><div class="lightense-backdrop"></div></body></html>
