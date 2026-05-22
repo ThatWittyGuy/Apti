@@ -26,6 +26,9 @@
 - https://www.guvi.in/hub/java-programs-tutorial/
 - https://www.guvi.in/hub/java-tutorial/introduction-to-multithreading/
 - https://www.placementpreparation.io/blog/java-interview-questions-for-freshers/
+- https://www.skilr.com/blog/top-50-top-java-interview-questions-and-answers/
+- https://www.skilr.com/blog/top-50-core-java-interview-questions-and-answers/
+- https://www.skilr.com/blog/top-50-java-interview-questions-and-answers/
 
 ### YT
 

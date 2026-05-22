@@ -9,6 +9,7 @@
 - https://github.com/sumitsojha88/Placement-Preparation
 - https://www.lets-code.co.in/articles/placement/
 - https://www.sanfoundry.com/quantitative-aptitude-questions-answers/
+- https://www.wcode.in/dashboard/aptitude
 
 <hr>
 
@@ -27,6 +28,7 @@
 - https://www.geeksforgeeks.org/aptitude/aptitude-questions-and-answers/
 - https://www.learntheta.com/placement-aptitude-concepts-formulas/
 - https://www.learntheta.com/placement-interview-questions/
+- https://www.wcode.in/dashboard/aptitude
 
 <hr>
 

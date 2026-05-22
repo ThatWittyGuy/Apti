@@ -12,6 +12,8 @@
 - Debugging: https://www.guvi.in/debugging/
 - https://github.com/liquidslr/interview-company-wise-problems
 - https://www.geeksforgeeks.org/java/java-interview-questions/
+- https://www.wcode.in/dashboard/aptitude
+- https://www.wcode.in/dashboard/interview
 
 ## C++
 

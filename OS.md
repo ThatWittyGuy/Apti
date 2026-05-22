@@ -7,6 +7,8 @@
 - https://www.geeksforgeeks.org/operating-systems/last-minute-notes-operating-systems/
 - https://www.guvi.in/hub/operating-system-tutorial/
 - https://www.placementpreparation.io/blog/operating-system-interview-questions-for-freshers/
+- https://www.wcode.in/dashboard/os/interview
+- https://www.wcode.in/dashboard/os
 
 ### MCQ
 

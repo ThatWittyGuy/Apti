@@ -9,3 +9,4 @@
 - https://algomaster.io/learn/behavioral/what-are-behavioral-interviews
 - https://www.hellointerview.com/learn/behavioral/overview/introduction
 - https://devinterview.io/questions/behavioral-questions/behavioral-junior-interview-questions/
+- https://www.wcode.in/dashboard/interview

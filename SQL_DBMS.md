@@ -44,9 +44,15 @@
 - https://www.datacamp.com/blog/top-sql-interview-questions-and-answers-for-beginners-and-intermediate-practitioners
 - https://www.simplilearn.com/top-sql-interview-questions-and-answers-article
 - https://www.interviewbit.com/sql-interview-questions/
+- NICE: https://www.wcode.in/dashboard/dbms/interview
+- https://www.skilr.com/blog/top-50-dbms-interview-questions-and-answers/?utm_source=chatgpt.com
+- https://www.skilr.com/blog/top-50-sql-interview-questions-and-answers/
 - https://drive.google.com/file/d/1uVPcK79gzFcmtAIMyI2dA8hdE8_RBQPR/view
 - https://medium.com/@chandantechie/top-20-most-asked-sql-interview-questions-for-data-science-analytics-role-30278a5e2052
 - https://www.linkedin.com/posts/raunakyadush_referrals-careers-querylogic-share-7433716908782448640-tahr/?utm_source=share&utm_medium=member_android&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI
 - https://www.linkedin.com/posts/sohansethi_i-learned-sql-in-8-weeks-using-this-roadmap-share-7432424595988602880-h2Ub/?utm_source=share&utm_medium=member_android&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI
 - https://www.placementpreparation.io/mcq/dbms/
 - https://www.placementpreparation.io/blog/dbms-interview-questions-for-freshers/
+- https://www.geeksforgeeks.org/dbms/commonly-asked-dbms-interview-questions/
+- https://www.geeksforgeeks.org/dbms/commonly-asked-dbms-interview-questions-set-2/
+- ADVANCED: https://www.geeksforgeeks.org/sql/sql-interview-questions/
