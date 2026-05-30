@@ -1,0 +1,46 @@
+Give me a downloadable word doc for on-campus SDE technical interview and assesment specifically for SQL(mysql) Queries based on a given problem statement and table schema like hackerrank and leetcode sql type questions, popular, common ones that are asked by companies like barclays, jp morgan, ubs etc, in total i want 150 questions and answers, 100 popular ones across different sql topics and patterns like joins, conditions, aggregat, group by, Date (important) etcfor common like 2nd highest salary, nth hihest salary, epmployee earning more than manager, etc and 50 advanved ones that are asked in company assessments like this is of barclays so understand the pattern as refernce and find or generat such good level questions
+Question 1: Customer with Highest Tip
+Problem:
+Write a query to select the customer_id of the customer whose last name is "kate" (irrespective of capitalization).
+If multiple such customers exist, select the one who has paid the highest tip.
+Table: customer_review
+Column Name	Type	Description
+customer_id	int	Unique ID of the customer
+customer_name	string	Name of the customer
+tip_amount	int	Tip amount paid by the customer
+comments	string	Experience comment given by the customer
+________________________________________
+Question 2: Monthly Sales Calculation
+Problem:
+Determine the monthly sales of the company, ordered by month.
+Note:
+Daily sale = cost × volume
+Table: coffee
+Column Name	Type	Description
+cost	int	Cost of coffee for that day
+dates	date	Date of the sale
+volume	int	Volume of coffee sold on that day
+________________________________________
+Question 3: October Month Data
+Problem:
+Write a query to find all records from the month of October (irrespective of the year), sorted in ascending order of Customer_ID.
+Table: bank
+Column Name	Type	Description
+Info_Date	date	Date when bank received customer information
+Customer_ID	int	Customer ID
+Transactions	int	Number of transactions made by the customer
+Amount	int	Amount present in the customer’s account
+________________________________________
+Question 4: Insurance Claim Eligibility
+Problem:
+An insurance company grants 150% of the claimed amount to eligible customers.
+A customer is eligible only if all the following conditions are satisfied:
+1.	Insurance type must be Life Insurance
+2.	No injury should be reported
+3.	Incident severity must be major
+4.	Customer must be employed
+5.	Claim amount must be less than 30 × premium amount
+Write a query to find:
+●	All eligible customers
+●	The final claim amount granted
+"For each give question means problem statement and schema, then solution (if more than one way to solve then give multiple options like using where , limit offset, window functions , do not give CTEs) (always give more than 1 type of solution if using windows fucntions, means the basic one and with window func) in MYSQL and also explanation of each line and also intuition for how to arrive at the correct solution for this problem and similar problems" full comprehensive doc for sql prep,
