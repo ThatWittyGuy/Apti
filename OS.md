@@ -9,6 +9,8 @@
 - https://www.placementpreparation.io/blog/operating-system-interview-questions-for-freshers/
 - https://www.wcode.in/dashboard/os/interview
 - https://www.wcode.in/dashboard/os
+- Complete: https://www.tpointtech.com/operating-system
+- https://www.tpointtech.com/operating-system-interview-questions
 
 ### MCQ
 

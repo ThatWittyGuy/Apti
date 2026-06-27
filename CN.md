@@ -12,6 +12,8 @@
 - https://prepinsta.com/interview-preparation/technical-interview-questions/computer-network/
 - https://www.geeksforgeeks.org/computer-networks/last-minute-notes-computer-network/
 - https://www.placementpreparation.io/mcq/computer-network/
+- Complete: https://www.tpointtech.com/computer-network-tutorial
+- https://www.tpointtech.com/networking-interview-questions
 
 ### YT
 

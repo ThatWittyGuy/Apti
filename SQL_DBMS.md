@@ -5,6 +5,12 @@
 - https://veedaily19.substack.com/p/strategically-preparing-for-sql-interviews
 - https://www.placementpreparation.io/blog/dbms-interview-questions-for-freshers/
 - https://www.guvi.in/hub/dbms-and-sql-tutorial/
+- https://www.tpointtech.com/dbms-tutorial
+- https://www.tpointtech.com/mysql-tutorial
+- https://www.tpointtech.com/sql-tutorial
+- https://www.tpointtech.com/mysql-interview-questions
+- https://www.tpointtech.com/sql-interview-questions
+- https://www.tpointtech.com/dbms-interview-questions
 
 ### SQL practice:
 
@@ -38,6 +44,7 @@
 - https://github.com/sumitsojha88/Placement-Preparation/blob/main/DBMS/DBMS%20Quick%20Guide/dbms_tutorial.pdf
 - https://www.geeksforgeeks.org/dbms/commonly-asked-dbms-interview-questions/
 - https://www.geeksforgeeks.org/dbms/last-minute-notes-dbms/
+- https://www.tpointtech.com/dbms-tutorial
 
 ### Interview
 
@@ -56,3 +63,4 @@
 - https://www.geeksforgeeks.org/dbms/commonly-asked-dbms-interview-questions/
 - https://www.geeksforgeeks.org/dbms/commonly-asked-dbms-interview-questions-set-2/
 - ADVANCED: https://www.geeksforgeeks.org/sql/sql-interview-questions/
+- https://www.tpointtech.com/sql-interview-questions

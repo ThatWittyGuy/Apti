@@ -7,6 +7,8 @@
 - https://www.tutorialspoint.com/java/java_multithreading.htm
 - https://www.geeksforgeeks.org/java/java/
 - https://smartprogramming.in/tutorials/java/java-introduction
+- https://www.tpointtech.com/java-tutorial
+- https://www.tpointtech.com/corejava-interview-questions#oopsinterview
 
 ### Interview Prep
 
@@ -19,6 +21,9 @@
 6. https://www.interviewbit.com/java-interview-questions/
 7. https://www.slideshare.net/slideshow/java-interview-questions-and-answers-spring-and-hibernate-interview-questions-java-tutorial-edureka/75390405
 8. https://medium.com/@javalearners/concurrency-2-executor-framework-interview-questions-part-1-da026877948d?source=user_profile_page---------10-------------4588a3cd4a97----------------------
+9. Core: https://www.tpointtech.com/corejava-interview-questions#oopsinterview
+10. Multithreading: https://www.tpointtech.com/java-multithreading-interview-questions
+11. Collections: https://www.tpointtech.com/java-collections-interview-questions
 
 - https://www.placementpreparation.io/blog/java-interview-questions-for-freshers/
 - https://www.placementpreparation.io/mcq/java/

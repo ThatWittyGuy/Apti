@@ -3,6 +3,10 @@
 - 154 pages: https://www.linkedin.com/posts/kashishkathuria_sql-notes-ugcPost-7448207717556617216--B_z?utm_source=social_share_send&utm_medium=android_app&rcm=ACoAAD_1Cm8BlYgJ0kZ2Nu9Z9LlW7XzXlBujAgI&utm_campaign=copy_link
 - 131 SQL questions: https://www.adaface.com/blog/sql-coding-interview-questions/
 - LMN: https://www.geeksforgeeks.org/operating-systems/last-minute-notes-operating-systems/
+- https://www.tpointtech.com/mysql-tutorial
+- https://www.tpointtech.com/mysql-interview-questions
+- https://www.tpointtech.com/sql-interview-questions
+- https://www.tpointtech.com/sql-tutorial
 
 <hr>
 

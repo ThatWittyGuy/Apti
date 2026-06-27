@@ -14,7 +14,11 @@
 - https://www.geeksforgeeks.org/java/java-interview-questions/
 - https://www.wcode.in/dashboard/aptitude
 - https://www.wcode.in/dashboard/interview
+- https://www.tpointtech.com/java-tutorial
 
 ## C++
 
 - https://www.geeksforgeeks.org/cpp/cpp-interview-questions/
+- https://www.tpointtech.com/c-programming-language-tutorial
+- https://www.tpointtech.com/cpp-tutorial
+- https://www.tpointtech.com/c-interview-questions
