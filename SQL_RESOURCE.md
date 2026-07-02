@@ -28,3 +28,4 @@
 - https://www.placementpreparation.io/blog/sql-interview-questions-for-freshers/
 - https://www.placementpreparation.io/programming-exercises/sql/advanced/
 - SQL Joins: https://www.scribd.com/document/451119458/ANSWERS-OF-JOINS
+- https://upesonline.ac.in/blog/advanced-sql-interview-questions
