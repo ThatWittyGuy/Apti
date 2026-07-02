@@ -3,6 +3,7 @@
 - https://docs.google.com/spreadsheets/d/1j05cmJ5JI8O9S4bIdKbw_jd0Y4KMZ_5liwyL8vjEbCw/edit?gid=0#gid=0
 - https://whimsical.com/object-oriented-programming-cheatsheet-by-love-babbar-YbSgLatbWQ4R5paV7EgqFw
 - https://www.tpointtech.com/java-tutorial
+- C++: https://sheelganvir.medium.com/oops-for-oncampus-placements-beginner-to-advanced-complete-oops-in-c-4bb3b91395b3
 
 ### Practice
 

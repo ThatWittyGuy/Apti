@@ -14,6 +14,7 @@
 - https://www.placementpreparation.io/mcq/computer-network/
 - Complete: https://www.tpointtech.com/computer-network-tutorial
 - https://www.tpointtech.com/networking-interview-questions
+- ALL: https://sheelganvir.medium.com/complete-computer-networking-basics-to-advanced-interview-preparation-b9c6b1a2889e
 
 ### YT
 
