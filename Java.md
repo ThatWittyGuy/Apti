@@ -9,6 +9,7 @@
 - https://smartprogramming.in/tutorials/java/java-introduction
 - https://www.tpointtech.com/java-tutorial
 - https://www.tpointtech.com/corejava-interview-questions#oopsinterview
+- https://www.lets-code.co.in/interview/corejavainterviewquestions/ (GOOD)
 
 ### Interview Prep
 

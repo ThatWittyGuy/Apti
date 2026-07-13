@@ -4,6 +4,7 @@
 - https://whimsical.com/object-oriented-programming-cheatsheet-by-love-babbar-YbSgLatbWQ4R5paV7EgqFw
 - https://www.tpointtech.com/java-tutorial
 - C++: https://sheelganvir.medium.com/oops-for-oncampus-placements-beginner-to-advanced-complete-oops-in-c-4bb3b91395b3
+- https://www.lets-code.co.in/interview/oppsinterviewquestions/ (GOOD)
 
 ### Practice
 

@@ -11,6 +11,7 @@
 - https://www.tpointtech.com/mysql-interview-questions
 - https://www.tpointtech.com/sql-interview-questions
 - https://www.tpointtech.com/dbms-interview-questions
+- https://www.lets-code.co.in/interview/dbmsinterview/
 
 ### SQL practice:
 

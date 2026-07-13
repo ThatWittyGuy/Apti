@@ -11,6 +11,7 @@
 - https://www.wcode.in/dashboard/os
 - Complete: https://www.tpointtech.com/operating-system
 - https://www.tpointtech.com/operating-system-interview-questions
+- https://www.lets-code.co.in/interview/osinterview/ (GOOD)
 
 ### MCQ
 
