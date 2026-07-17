@@ -5,6 +5,7 @@
 - https://veedaily19.substack.com/p/strategically-preparing-for-sql-interviews
 - https://www.placementpreparation.io/blog/dbms-interview-questions-for-freshers/
 - https://www.guvi.in/hub/dbms-and-sql-tutorial/
+- https://topperworld.in/query-optimization-in-dbms/
 - https://www.tpointtech.com/dbms-tutorial
 - https://www.tpointtech.com/mysql-tutorial
 - https://www.tpointtech.com/sql-tutorial
