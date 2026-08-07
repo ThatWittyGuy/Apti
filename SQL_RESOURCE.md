@@ -7,6 +7,7 @@
 - https://www.tpointtech.com/mysql-interview-questions
 - https://www.tpointtech.com/sql-interview-questions
 - https://www.tpointtech.com/sql-tutorial
+- Advanced: https://www.practicewindowfunctions.com/
 
 <hr>
 
