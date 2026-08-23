@@ -13,6 +13,7 @@
 - https://www.tpointtech.com/sql-interview-questions
 - https://www.tpointtech.com/dbms-interview-questions
 - https://www.lets-code.co.in/interview/dbmsinterview/
+- https://github.com/Devinterview-io/sql-interview-questions
 
 ### SQL practice:
 
