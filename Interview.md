@@ -11,3 +11,8 @@
 - https://devinterview.io/questions/behavioral-questions/behavioral-junior-interview-questions/
 - https://www.wcode.in/dashboard/interview
 - https://www.tpointtech.com/hr-interview-questions
+
+## Puzzles
+
+- https://www.geeksforgeeks.org/aptitude/top-100-puzzles-asked-in-interviews/
+- https://www.geeksforgeeks.org/aptitude/top-20-puzzles-commonly-asked-during-sde-interviews/
