@@ -1,0 +1,3 @@
+https://www.geeksforgeeks.org/reactjs/react-interview-questions/
+
+https://medium.com/@arunseetharaman/understanding-the-response-from-an-explain-plan-in-postgresql-a-deep-dive-1ee8cc42d6a4
